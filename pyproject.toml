@@ -9,6 +9,10 @@ packages = [{include = "german_law_bot"}]
 [tool.poetry.dependencies]
 python = "^3.11"
 chromadb = "^0.4.6"
+openai = "^0.27.9"
+black = "^23.7.0"
+ruff = "^0.0.285"
+gradio = "^3.40.1"
 
 
 [build-system]
