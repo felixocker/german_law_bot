@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "german-law-bot"
+version = "0.1.0"
+description = ""
+authors = ["Felix Ocker <felix.ocker@googlemail.com>"]
+readme = "README.md"
+packages = [{include = "german_law_bot"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+chromadb = "^0.4.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
