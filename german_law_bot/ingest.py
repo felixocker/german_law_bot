@@ -27,7 +27,7 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
-def download_and_unzip(url: str, destination: str = "../data/sources/") -> None:
+def download_and_unzip(url: str, destination: str = "../data/downloads/") -> None:
     http_response = urlopen(url)
     zipfile = ZipFile(BytesIO(http_response.read()))
     zipfile.extractall(path=destination)
@@ -43,7 +43,7 @@ class Paragraph:
     footnotes: str
 
 
-def extract_xmls(source: str = "../data/sources/") -> List[Paragraph]:
+def extract_xmls(source: str = "../data/downloads/") -> List[Paragraph]:
     # TODO: possibly combine sub-laws into one chunk
     files = [os.path.join(source, f) for f in os.listdir(source) if f.endswith(".xml")]
     res = []

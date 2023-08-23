@@ -1,0 +1,9 @@
+# directories
+chroma/
+downloads/
+
+# file types
+*.jpg
+*.sqlite3
+*.xml
+*.zip
