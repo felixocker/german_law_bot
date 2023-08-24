@@ -1,4 +1,4 @@
-# german_law_bot :judge:
+# :judge: german_law_bot
 A bot for QA over German law.
 
 
@@ -14,8 +14,13 @@ A bot for QA over German law.
 
 
 ## Ideas
-* :grey_question::grey_exclamation: Basic QA for German laws
+* :speech_balloon: Basic QA for German laws
 * :telescope: A bot for coming up with legal arguments for specific cases based on German laws
+
+
+## Example
+Question: _Gilt die Überführung eines Wirtschaftsguts in das Privatvermögen des Steuerpflichtigen durch Entnahme als Anschaffung?_ \
+Answer: _Ja, die Überführung eines Wirtschaftsguts in das Privatvermögen des Steuerpflichtigen durch Entnahme gilt als Anschaffung. Quelle: EStG_23_
 
 
 ## Sources
