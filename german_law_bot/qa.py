@@ -55,7 +55,7 @@ def query_llm(
         except openai.error.ServiceUnavailableError as e:
             logger.error(e)
     res = response.choices[0].message.content
-    logger.info(f"Received response to query: {res}.")
+    logger.info(f"Received response to query: `{res}`.")
     return res
 
 
@@ -76,14 +76,14 @@ def rag_query(
         context = {}
         irrelevant_srcs = []
         for i in range(n_results):
-            context = chunks_["documents"][0][i]
-            prompt = PROMPT_MAP_REDUCE.replace("<context>", context).replace("<question>", query)
+            context_single = chunks_["documents"][0][i]
+            prompt = PROMPT_MAP_REDUCE.replace("<context>", context_single).replace("<question>", query)
             msgs = [{"role": "user", "content": prompt}]
             res = query_llm(msgs, model)
             if res.strip().lower() == "irrelevant":
                 irrelevant_srcs.append(sources[i])
                 continue
-            context[chunks_["ids"][0][i]] = res
+            context[sources[i]] = res
         sources = [s for s in sources if s not in irrelevant_srcs]
         context_summary = "\n".join([src+": "+txt for src, txt in context.items()])
         prompt = PROMPT_MAP_REDUCE_SUMMARY.replace("<context>", context_summary).replace("<question>", query)
