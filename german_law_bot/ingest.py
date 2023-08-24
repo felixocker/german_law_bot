@@ -9,7 +9,6 @@ from typing import (
 from dataclasses import dataclass
 
 import chromadb
-from chromadb.utils import embedding_functions
 import xml.etree.ElementTree as ET
 
 from urllib.request import urlopen
@@ -17,13 +16,12 @@ from io import BytesIO
 from zipfile import ZipFile
 
 from constants import (
-    EMBEDDING_MODEL,
     ESTG_XML,
-    OPENAI_API_KEY,
+    OPENAI_EF,
 )
 
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -114,13 +112,9 @@ def chunk_paragraphs(
 
 def load_into_chroma(parags: List[Paragraph]) -> None:
     chroma_client = chromadb.PersistentClient(path="../data/chroma")
-    openai_ef = embedding_functions.OpenAIEmbeddingFunction(
-        api_key=OPENAI_API_KEY,
-        model_name=EMBEDDING_MODEL
-    )
-    collection = chroma_client.get_or_create_collection(name="laws", embedding_function=openai_ef)
+    collection = chroma_client.get_or_create_collection(name="laws", embedding_function=OPENAI_EF)
     collection.add(
-        documents=[p.title + p.text for p in parags],
+        documents=[p.title + "\n\n" + p.text for p in parags],
         metadatas=[{"law": p.law, "paragraph": p.par, "title": p.title} for p in parags],
         ids=[p.law + p.par.replace("§", "").replace(" ", "_") for p in parags]
     )
@@ -129,11 +123,7 @@ def load_into_chroma(parags: List[Paragraph]) -> None:
 
 def peek() -> None:
     chroma_client = chromadb.PersistentClient(path="../data/chroma")
-    openai_ef = embedding_functions.OpenAIEmbeddingFunction(
-        api_key=OPENAI_API_KEY,
-        model_name=EMBEDDING_MODEL
-    )
-    collection = chroma_client.get_or_create_collection(name="laws", embedding_function=openai_ef)
+    collection = chroma_client.get_or_create_collection(name="laws", embedding_function=OPENAI_EF)
     print(collection.peek())
 
 
