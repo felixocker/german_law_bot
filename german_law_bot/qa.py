@@ -91,7 +91,7 @@ def rag_query(
         raise ValueError(f"n_results must be >= 0.")
     msgs = [{"role": "user", "content": prompt}]
     res = query_llm(msgs, model)
-    logger.info(f"Got response: {res}.")
+    logger.info(f"Got response: `{res}`.")
     return res + f"\n\nQuelle: {','.join(sources)}"
 
 
