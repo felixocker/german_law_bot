@@ -1,4 +1,4 @@
-# german_law_bot
+# german_law_bot :judge:
 A bot for QA over German law.
 
 
@@ -6,11 +6,16 @@ A bot for QA over German law.
 * german_law_bot
   * `constants.py` - some generic settings
   * `ingest.py` - download law file, extract data, feed into vector store
-  * `qa.py` - question answering over vector store
+  * `qa.py` - QA using RAG
   * `frontend.py` - WIP
 * data
   * chroma - the persistent vector store lives here
   * sources - source files are stored here
+
+
+## Ideas
+* :grey_question::grey_exclamation: Basic QA for German laws
+* :telescope: A bot for coming up with legal arguments for specific cases based on German laws
 
 
 ## Sources
