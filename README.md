@@ -1,5 +1,7 @@
 # :judge: german_law_bot
-A bot for QA over German law.
+A bot for QA over German law. \
+Disclaimer: This bot does not, and is not intended to, constitute legal advice. \
+To get good results, be as precise as possible with your prompts.
 
 
 ## Contents
@@ -25,8 +27,8 @@ FRAGE: _Gilt die Überführung eines Wirtschaftsguts in das Privatvermögen des 
 ANTWORT: _Ja, die Überführung eines Wirtschaftsguts in das Privatvermögen des Steuerpflichtigen durch Entnahme gilt als Anschaffung. Quelle: EStG_23_
 
 ### BGB
-FRAGE: _Wer trägt im Widerrufsfall die Gefahr der Rücksendung der Waren?_ \
-ANTWORT: _Im Widerrufsfall trägt der Käufer bzw. Verbraucher die Gefahr der Rücksendung der Waren. Quelle: BGB_447, BGB_357d (Auch geprueft: BGB_644)_
+FRAGE: _Wer trägt im Widerrufsfall bei einem Verbrauchervertrag die Gefahr der Rücksendung der Waren?_ \
+ANTWORT: _Der Verbraucher trägt bei Widerruf bei einem Verbrauchervertrag die Gefahr der Rücksendung der Waren. Quelle: BGB_355, BGB_357d (Auch geprueft: BGB_357e)_
 
 ## Sources
 * [EStG](https://www.gesetze-im-internet.de/estg/)
