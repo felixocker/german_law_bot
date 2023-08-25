@@ -69,6 +69,7 @@ def rag_query(
     """
     chunks_ = retrieve_from_vdb(query=query, n=n_results)
     sources = chunks_["ids"][0]
+    irrelevant_srcs = None
     if n_results == 1:
         context = chunks_["documents"][0][0]
         prompt = PROMPT_RAG.replace("<context>", context).replace("<question>", query)
@@ -92,13 +93,19 @@ def rag_query(
     msgs = [{"role": "user", "content": prompt}]
     res = query_llm(msgs, model)
     logger.info(f"Got response: `{res}`.")
-    return res + f"\n\nQuelle: {','.join(sources)}"
+    response = res + f"\n\nQuelle: {','.join(sources)}"
+    if irrelevant_srcs:
+        response += f"(Auch geprueft: {', '.join(irrelevant_srcs)})"
+    return response
 
 
 if __name__ == "__main__":
-    example = (
-        "Gilt die Überführung eines Wirtschaftsguts in das Privatvermögen "
-        "des Steuerpflichtigen durch Entnahme als Anschaffung?"
-    )
-    mr = rag_query(query=example, n_results=3)
-    print(mr)
+    while True:
+        question = input("FRAGE: ")
+        if question == "quit":
+            break
+        mr = rag_query(query=question, n_results=3)
+        print("ANTWORT:\n" + mr)
+    # Example:
+    # Gilt die Überführung eines Wirtschaftsguts in das Privatvermögen des Steuerpflichtigen durch
+    # Entnahme als Anschaffung?
