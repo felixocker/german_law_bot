@@ -18,6 +18,7 @@ from prompts.prompt_qa import (
     PROMPT_MAP_REDUCE_SUMMARY,
     PROMPT_RAG,
 )
+from utils import get_embedding
 
 
 logging.basicConfig(level=logging.INFO)
@@ -25,10 +26,11 @@ logger = logging.getLogger(__name__)
 
 
 def retrieve_from_vdb(query: str, n: int = 3) -> dict:
+    query_embedding = get_embedding(query)
     chroma_client = chromadb.PersistentClient(path="../data/chroma")
     collection = chroma_client.get_or_create_collection(name="laws", embedding_function=OPENAI_EF)
     relevant_chunks = collection.query(
-        query_texts=[query],
+        query_embeddings=[query_embedding],
         n_results=n,
     )
     logger.info(f"Most relevant chunks for query `{query}` are {relevant_chunks['ids']}")
@@ -93,9 +95,9 @@ def rag_query(
     msgs = [{"role": "user", "content": prompt}]
     res = query_llm(msgs, model)
     logger.info(f"Got response: `{res}`.")
-    response = res + f"\n\nQuelle: {','.join(sources)}"
+    response = res + f"\n\nQuelle: {', '.join(sources)}"
     if irrelevant_srcs:
-        response += f"(Auch geprueft: {', '.join(irrelevant_srcs)})"
+        response += f" (Auch geprueft: {', '.join(irrelevant_srcs)})"
     return response
 
 

@@ -19,6 +19,7 @@ from constants import (
     LAWS,
     OPENAI_EF,
 )
+from utils import get_embedding
 
 
 logging.basicConfig(level=logging.INFO)
@@ -39,6 +40,7 @@ class Paragraph:
     title: str
     text: str
     footnotes: str
+    embedding: List[float] = None
 
 
 def extract_xmls(source: str) -> List[Paragraph]:
@@ -73,6 +75,8 @@ def extract_xmls(source: str) -> List[Paragraph]:
                                 footnotes = " ".join(list(cont.itertext()))
                     else:
                         valid = False
+                if not title and not text:
+                    valid = False
             if valid:
                 par = Paragraph(law=law, par=par, title=title, text=text, footnotes=footnotes)
                 res.append(par)
@@ -104,10 +108,20 @@ def chunk_paragraphs(
                     par=p.par+f" Teil {i+1}",
                     title=p.title+f" Teil {i+1}",
                     text=p.text[chunk_start:chunk_end],
-                    footnotes=p.footnotes
+                    footnotes=p.footnotes,
                 ))
             logger.info(f"Split up {p.par} into {parts} parts due to its length of {text_len}.")
     return parags_
+
+
+def embed_paragraphs(
+    parags: List[Paragraph],
+) -> List[Paragraph]:
+    ln = len(parags)
+    for c, p in enumerate(parags):
+        p.embedding = get_embedding(p.title + "\n\n" + p.text)
+        logger.info(f"Embedding {c}/{ln}: {p}")
+    return parags
 
 
 def load_into_chroma(parags: List[Paragraph]) -> None:
@@ -115,6 +129,7 @@ def load_into_chroma(parags: List[Paragraph]) -> None:
     collection = chroma_client.get_or_create_collection(name="laws", embedding_function=OPENAI_EF)
     collection.add(
         documents=[p.title + "\n\n" + p.text for p in parags],
+        embeddings=[p.embedding for p in parags],
         metadatas=[{"law": p.law, "paragraph": p.par, "title": p.title} for p in parags],
         ids=[p.law + p.par.replace("§", "").replace(" ", "_") for p in parags]
     )
@@ -134,7 +149,8 @@ def main():
         logger.info(f"Retrieved {law}.")
     parags = extract_xmls(source=downloads_folder)
     chunked_parags = chunk_paragraphs(parags)
-    load_into_chroma(chunked_parags)
+    embedded_parags = embed_paragraphs(chunked_parags)
+    load_into_chroma(embedded_parags)
     peek()
 
 
