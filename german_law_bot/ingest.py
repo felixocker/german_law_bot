@@ -16,7 +16,7 @@ from io import BytesIO
 from zipfile import ZipFile
 
 from constants import (
-    ESTG_XML,
+    LAWS,
     OPENAI_EF,
 )
 
@@ -25,7 +25,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def download_and_unzip(url: str, destination: str = "../data/downloads/") -> None:
+def download_and_unzip(url: str, destination: str) -> None:
     http_response = urlopen(url)
     zipfile = ZipFile(BytesIO(http_response.read()))
     zipfile.extractall(path=destination)
@@ -41,7 +41,7 @@ class Paragraph:
     footnotes: str
 
 
-def extract_xmls(source: str = "../data/downloads/") -> List[Paragraph]:
+def extract_xmls(source: str) -> List[Paragraph]:
     # TODO: possibly combine sub-laws into one chunk
     files = [os.path.join(source, f) for f in os.listdir(source) if f.endswith(".xml")]
     res = []
@@ -61,7 +61,7 @@ def extract_xmls(source: str = "../data/downloads/") -> List[Paragraph]:
                             if md.tag == "enbez":
                                 par = md.text
                             if md.tag == "titel":
-                                title = md.text
+                                title = " ".join(list(md.itertext()))
                     else:
                         valid = False
                 if child.tag == "textdaten":
@@ -128,8 +128,11 @@ def peek() -> None:
 
 
 def main():
-    download_and_unzip(url=ESTG_XML)
-    parags = extract_xmls()
+    downloads_folder = "../data/downloads/"
+    for law in LAWS:
+        download_and_unzip(url=LAWS[law], destination=downloads_folder)
+        logger.info(f"Retrieved {law}.")
+    parags = extract_xmls(source=downloads_folder)
     chunked_parags = chunk_paragraphs(parags)
     load_into_chroma(chunked_parags)
     peek()
