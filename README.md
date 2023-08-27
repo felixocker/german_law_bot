@@ -10,6 +10,7 @@ To get good results, be as precise as possible with your prompts.
   * `ingest.py` - download law file, extract data, feed into vector store
   * `qa.py` - QA using RAG
   * `frontend.py` - WIP :construction:
+  * `config.yaml` - settings for what to load
 * data
   * `chroma/` - the persistent vector store lives here
   * `downloads/` - source files are stored here
@@ -32,7 +33,7 @@ ANTWORT: _Der Verbraucher trägt bei Widerruf bei einem Verbrauchervertrag die G
 
 ## Sources
 * [EStG](https://www.gesetze-im-internet.de/estg/)
-* [BGB](https://www.gesetze-im-internet.de/bgb/index.html)
+* [BGB](https://www.gesetze-im-internet.de/bgb/)
 
 
 ## Dev notes
