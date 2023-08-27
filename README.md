@@ -6,14 +6,23 @@ To get good results, be as precise as possible with your prompts.
 
 ## Contents
 * german_law_bot
-  * `constants.py` - some generic settings
-  * `ingest.py` - download law file, extract data, feed into vector store
-  * `qa.py` - QA using RAG
-  * `frontend.py` - WIP :construction:
   * `config.yaml` - settings for what to load
+  * `constants.py` - some generic settings
+  * `frontend.py` - gradio-based frontend
+  * `ingest.py` - download codes of law, extract data, feed into vector store
+  * `qa.py` - QA using RAG
+  * `utils.py` - utilities that are reused across modules
 * data
   * `chroma/` - the persistent vector store lives here
   * `downloads/` - source files are stored here
+
+
+## Usage
+* Specify the codes of law you need in `config.yaml` (provide the download links for the XML zips)
+* Load the data: `python ingest.py`
+* Run
+  * In CLI: `python qa.py`
+  * In your browser: `python frontend.py`
 
 
 ## Ideas
@@ -30,6 +39,7 @@ ANTWORT: _Ja, die Überführung eines Wirtschaftsguts in das Privatvermögen des
 ### BGB
 FRAGE: _Wer trägt im Widerrufsfall bei einem Verbrauchervertrag die Gefahr der Rücksendung der Waren?_ \
 ANTWORT: _Der Verbraucher trägt bei Widerruf bei einem Verbrauchervertrag die Gefahr der Rücksendung der Waren. Quelle: BGB_355, BGB_357d (Auch geprueft: BGB_357e)_
+
 
 ## Sources
 * [EStG](https://www.gesetze-im-internet.de/estg/)
