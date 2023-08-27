@@ -1,10 +1,20 @@
 #!/usr/bin/env python3
-"""insert docstring here"""
+"""Gradio frontend"""
+import gradio as gr
+
+from qa import rag_query
 
 
-def main():
-    raise NotImplementedError
+with gr.Blocks() as demo:
+    chatbot = gr.Chatbot()
+    msg = gr.Textbox()
+    clear = gr.ClearButton([msg, chatbot])
 
+    def respond(message: str, chat_history):
+        rag_response = rag_query(query=message, n_results=5)
+        chat_history.append((message, rag_response))
+        return "", chat_history
 
-if __name__ == "__main__":
-    main()
+    msg.submit(respond, [msg, chatbot], [msg, chatbot])
+
+demo.launch()
