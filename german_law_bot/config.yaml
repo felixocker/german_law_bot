@@ -1,0 +1,10 @@
+BGB:
+  desired: true
+  file: BJNR001950896.xml
+  link: https://www.gesetze-im-internet.de/bgb/xml.zip
+  loaded: true
+ESTG:
+  desired: true
+  file: BJNR010050934.xml
+  link: https://www.gesetze-im-internet.de/estg/xml.zip
+  loaded: true
