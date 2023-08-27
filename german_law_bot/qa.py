@@ -88,7 +88,10 @@ def rag_query(
                 continue
             context[sources[i]] = res
         sources = [s for s in sources if s not in irrelevant_srcs]
-        context_summary = "\n".join([src+": "+txt for src, txt in context.items()])
+        if not sources:
+            return f"Keine relevanten Informationen verfuegbar (geprueft: {', '.join(irrelevant_srcs)})."
+        else:
+            context_summary = "\n".join([src+": "+txt for src, txt in context.items()])
         prompt = PROMPT_MAP_REDUCE_SUMMARY.replace("<context>", context_summary).replace("<question>", query)
     else:
         raise ValueError(f"n_results must be >= 0.")
@@ -106,7 +109,7 @@ if __name__ == "__main__":
         question = input("FRAGE: ")
         if question == "quit":
             break
-        mr = rag_query(query=question, n_results=3)
+        mr = rag_query(query=question, n_results=5)
         print("ANTWORT:\n" + mr)
     # Example:
     # Gilt die Überführung eines Wirtschaftsguts in das Privatvermögen des Steuerpflichtigen durch

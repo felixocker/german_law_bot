@@ -20,7 +20,7 @@ Frage:
 """
 
 PROMPT_MAP_REDUCE_SUMMARY = """\
-Beantworte die folgende Frage nur basierend auf dem bereitgestellten Informationen, welche basierend auf anderen Ausschnitten gewonnen wurden.
+Beantworte die folgende Frage nur basierend auf dem folgenden Kontext, welcher aus den gegebenen Ausschnitten zusammengefasst wurde.
 Solltest du die Frage nicht rein basierend auf dem Kontext beantworten können, antworte, dass du die Antwort nicht weißt.
 KONTEXT:
 <context>
