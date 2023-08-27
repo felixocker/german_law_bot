@@ -17,7 +17,7 @@ def echo(message, history, n_results, law_filter):
     response = rag_query(query=message, n_results=n_results, law_filter=law_filter)
     for i, _ in enumerate(response):
         time.sleep(0.02)
-        yield response[:i+1]
+        yield response[: i + 1]
 
 
 with gr.Blocks() as demo:
@@ -26,15 +26,18 @@ with gr.Blocks() as demo:
     law_filter_ = gr.Dropdown(
         label="Optionally limit the search to specific laws.",
         choices=[law for law in config],
-        multiselect=True
+        multiselect=True,
     )
-    n_results_ = gr.Number(value=5, label="Number of chunks to be considered", precision=0, render=False)
+    n_results_ = gr.Number(
+        value=5, label="Number of chunks to be considered", precision=0, render=False
+    )
 
     gr.ChatInterface(
-        echo, additional_inputs=[
+        echo,
+        additional_inputs=[
             n_results_,
             law_filter_,
-        ]
+        ],
     )
 
 

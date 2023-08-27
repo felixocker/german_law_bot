@@ -11,6 +11,5 @@ CONFIG = "config.yaml"
 DOWNLOADS = "../data/downloads/"
 
 OPENAI_EF = embedding_functions.OpenAIEmbeddingFunction(
-    api_key=OPENAI_API_KEY,
-    model_name=EMBEDDING_MODEL
+    api_key=OPENAI_API_KEY, model_name=EMBEDDING_MODEL
 )

@@ -96,7 +96,9 @@ def extract_xml(source_dir: str, source_file: str) -> List[Paragraph]:
             if not title and not text:
                 valid = False
         if valid:
-            par = Paragraph(law=law, par=par, title=title, text=text, footnotes=footnotes)
+            par = Paragraph(
+                law=law, par=par, title=title, text=text, footnotes=footnotes
+            )
             res.append(par)
         else:
             continue
@@ -105,9 +107,7 @@ def extract_xml(source_dir: str, source_file: str) -> List[Paragraph]:
 
 
 def chunk_paragraphs(
-    parags: List[Paragraph],
-    max_chunk: int = 16_000,
-    overlap: int = 500
+    parags: List[Paragraph], max_chunk: int = 16_000, overlap: int = 500
 ) -> List[Paragraph]:
     # NOTE: this is a very pragmatic approach to chunking
     parags_ = []
@@ -119,16 +119,20 @@ def chunk_paragraphs(
             parts = text_len // (max_chunk + overlap) + 1
             chunk_length = text_len // parts
             for i in range(parts):
-                chunk_start = i*chunk_length - (i > 0) * overlap
-                chunk_end = (i+1) * chunk_length + overlap
-                parags_.append(Paragraph(
-                    law=p.law,
-                    par=p.par+f" Teil {i+1}",
-                    title=p.title+f" Teil {i+1}",
-                    text=p.text[chunk_start:chunk_end],
-                    footnotes=p.footnotes,
-                ))
-            logger.info(f"Split up {p.par} into {parts} parts due to its length of {text_len}.")
+                chunk_start = i * chunk_length - (i > 0) * overlap
+                chunk_end = (i + 1) * chunk_length + overlap
+                parags_.append(
+                    Paragraph(
+                        law=p.law,
+                        par=p.par + f" Teil {i+1}",
+                        title=p.title + f" Teil {i+1}",
+                        text=p.text[chunk_start:chunk_end],
+                        footnotes=p.footnotes,
+                    )
+                )
+            logger.info(
+                f"Split up {p.par} into {parts} parts due to its length of {text_len}."
+            )
     return parags_
 
 
@@ -144,19 +148,25 @@ def embed_paragraphs(
 
 def load_into_chroma(parags: List[Paragraph]) -> None:
     chroma_client = chromadb.PersistentClient(path="../data/chroma")
-    collection = chroma_client.get_or_create_collection(name="laws", embedding_function=OPENAI_EF)
+    collection = chroma_client.get_or_create_collection(
+        name="laws", embedding_function=OPENAI_EF
+    )
     collection.add(
         documents=[p.title + "\n\n" + p.text for p in parags],
         embeddings=[p.embedding for p in parags],
-        metadatas=[{"law": p.law, "paragraph": p.par, "title": p.title} for p in parags],
-        ids=[p.law + p.par.replace("§", "").replace(" ", "_") for p in parags]
+        metadatas=[
+            {"law": p.law, "paragraph": p.par, "title": p.title} for p in parags
+        ],
+        ids=[p.law + p.par.replace("§", "").replace(" ", "_") for p in parags],
     )
     logger.info(f"Loaded {len(parags)} paragraphs into the vector store.")
 
 
 def peek() -> None:
     chroma_client = chromadb.PersistentClient(path="../data/chroma")
-    collection = chroma_client.get_or_create_collection(name="laws", embedding_function=OPENAI_EF)
+    collection = chroma_client.get_or_create_collection(
+        name="laws", embedding_function=OPENAI_EF
+    )
     print(collection.peek())
 
 
@@ -165,7 +175,9 @@ def main() -> None:
     config = load_settings()
     for law in config:
         if config[law]["desired"] is True and config[law]["loaded"] is False:
-            filename = download_and_unzip(url=config[law]["link"], destination=downloads_folder)
+            filename = download_and_unzip(
+                url=config[law]["link"], destination=downloads_folder
+            )
             parags = extract_xml(source_dir=downloads_folder, source_file=filename)
             chunked_parags = chunk_paragraphs(parags)
             embedded_parags = embed_paragraphs(chunked_parags)

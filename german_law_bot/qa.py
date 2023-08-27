@@ -32,13 +32,17 @@ def retrieve_from_vdb(
 ) -> dict:
     query_embedding = get_embedding(query)
     chroma_client = chromadb.PersistentClient(path="../data/chroma")
-    collection = chroma_client.get_or_create_collection(name="laws", embedding_function=OPENAI_EF)
+    collection = chroma_client.get_or_create_collection(
+        name="laws", embedding_function=OPENAI_EF
+    )
     relevant_chunks = collection.query(
         query_embeddings=[query_embedding],
         n_results=n,
         where=where_filter,
     )
-    logger.info(f"Most relevant chunks for query `{query}` are {relevant_chunks['ids']}")
+    logger.info(
+        f"Most relevant chunks for query `{query}` are {relevant_chunks['ids']}"
+    )
     return relevant_chunks
 
 
@@ -92,7 +96,9 @@ def rag_query(
         irrelevant_srcs = []
         for i in range(n_results):
             context_single = chunks_["documents"][0][i]
-            prompt = PROMPT_MAP_REDUCE.replace("<context>", context_single).replace("<question>", query)
+            prompt = PROMPT_MAP_REDUCE.replace("<context>", context_single).replace(
+                "<question>", query
+            )
             msgs = [{"role": "user", "content": prompt}]
             res = query_llm(msgs, model)
             if res.strip().lower() == "irrelevant":
@@ -103,8 +109,12 @@ def rag_query(
         if not sources:
             return f"Keine relevanten Informationen verfuegbar (geprueft: {', '.join(irrelevant_srcs)})."
         else:
-            context_summary = "\n".join([src+": "+txt for src, txt in context.items()])
-        prompt = PROMPT_MAP_REDUCE_SUMMARY.replace("<context>", context_summary).replace("<question>", query)
+            context_summary = "\n".join(
+                [src + ": " + txt for src, txt in context.items()]
+            )
+        prompt = PROMPT_MAP_REDUCE_SUMMARY.replace(
+            "<context>", context_summary
+        ).replace("<question>", query)
     else:
         raise ValueError(f"n_results must be >= 0.")
     msgs = [{"role": "user", "content": prompt}]
