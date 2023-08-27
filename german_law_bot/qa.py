@@ -25,13 +25,18 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def retrieve_from_vdb(query: str, n: int = 3) -> dict:
+def retrieve_from_vdb(
+    query: str,
+    where_filter: dict,
+    n: int = 3,
+) -> dict:
     query_embedding = get_embedding(query)
     chroma_client = chromadb.PersistentClient(path="../data/chroma")
     collection = chroma_client.get_or_create_collection(name="laws", embedding_function=OPENAI_EF)
     relevant_chunks = collection.query(
         query_embeddings=[query_embedding],
         n_results=n,
+        where=where_filter,
     )
     logger.info(f"Most relevant chunks for query `{query}` are {relevant_chunks['ids']}")
     return relevant_chunks
@@ -65,11 +70,18 @@ def rag_query(
     query: str,
     model: str = "gpt-3.5-turbo",
     n_results: int = 3,
+    law_filter: List[str] = None,
 ) -> str:
     """Answer query using Retrieval Augmented Generation.
     Use map reduce if the number of chunks to be considered is set to be larger than 1.
     """
-    chunks_ = retrieve_from_vdb(query=query, n=n_results)
+    if law_filter is None:
+        law_filter = {}
+    elif len(law_filter) == 1:
+        law_filter = {"law": law_filter[0]}
+    else:
+        law_filter = {"$or": [{"law": lf} for lf in law_filter]}
+    chunks_ = retrieve_from_vdb(query=query, n=n_results, where_filter=law_filter)
     sources = chunks_["ids"][0]
     irrelevant_srcs = None
     if n_results == 1:
