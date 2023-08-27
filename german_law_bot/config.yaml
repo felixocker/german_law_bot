@@ -2,9 +2,11 @@ BGB:
   desired: true
   file: BJNR001950896.xml
   link: https://www.gesetze-im-internet.de/bgb/xml.zip
+  website: https://www.gesetze-im-internet.de/bgb/
   loaded: true
-ESTG:
+EStG:
   desired: true
   file: BJNR010050934.xml
   link: https://www.gesetze-im-internet.de/estg/xml.zip
+  website: https://www.gesetze-im-internet.de/estg/
   loaded: true
