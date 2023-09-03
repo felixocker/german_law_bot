@@ -79,7 +79,7 @@ def rag_query(
     """Answer query using Retrieval Augmented Generation.
     Use map reduce if the number of chunks to be considered is set to be larger than 1.
     """
-    if law_filter is None:
+    if not law_filter:
         law_filter = {}
     elif len(law_filter) == 1:
         law_filter = {"law": law_filter[0]}
