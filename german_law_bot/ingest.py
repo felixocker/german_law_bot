@@ -10,35 +10,24 @@ from dataclasses import dataclass
 
 import chromadb
 import xml.etree.ElementTree as ET
-import yaml
 
 from urllib.request import urlopen
 from io import BytesIO
 from zipfile import ZipFile
 
 from constants import (
-    CONFIG,
     DOWNLOADS,
     OPENAI_EF,
 )
-from utils import get_embedding
+from utils import (
+    get_embedding,
+    load_settings,
+    save_settings,
+)
 
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-
-def load_settings(config: str = CONFIG) -> dict:
-    with open(config, "r") as f:
-        conf = yaml.safe_load(f)
-    logger.info("Loaded config from file.")
-    return conf
-
-
-def save_settings(data: dict, config: str = CONFIG) -> None:
-    with open(config, "w") as f:
-        yaml.dump(data, f, default_flow_style=False)
-    logger.info("Updated config with current status.")
 
 
 def download_and_unzip(url: str, destination: str) -> str:
