@@ -52,11 +52,21 @@ def delete_from_db(abbreviation: str) -> None:
     save_settings(config_)
 
 
-with gr.Blocks() as demo:
+def describe_loaded() -> str:
     config = load_settings()
+    description_ = "<br>".join([law + ": " + config[law]["website"] for law in config])
+    return description_
+
+
+with gr.Blocks() as demo:
+
     gr.Markdown("# German law bot")
     gr.Markdown("## Information and settings")
-    gr.Markdown("<br>".join([law + ": " + config[law]["website"] for law in config]))
+
+    show_latest = gr.Button("Update and show loaded codes of law")
+    description = gr.Markdown()
+    show_latest.click(fn=describe_loaded, outputs=description)
+
     law_filter_ = gr.Dropdown(
         label="Optionally limit the search to specific laws.",
         choices=[law for law in load_settings()],
