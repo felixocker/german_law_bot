@@ -151,6 +151,20 @@ def load_into_chroma(parags: List[Paragraph]) -> None:
     logger.info(f"Loaded {len(parags)} paragraphs into the vector store.")
 
 
+def delete_from_chroma(law_code: str) -> None:
+    chroma_client = chromadb.PersistentClient(path="../data/chroma")
+    collection = chroma_client.get_or_create_collection(
+        name="laws", embedding_function=OPENAI_EF
+    )
+    del_len = len(collection.get(
+        where={"law": law_code}
+    ))
+    collection.delete(
+        where={"law": law_code}
+    )
+    logger.info(f"Deleted {del_len} elements from the vector store for {law_code}.")
+
+
 def peek() -> None:
     chroma_client = chromadb.PersistentClient(path="../data/chroma")
     collection = chroma_client.get_or_create_collection(
@@ -159,15 +173,14 @@ def peek() -> None:
     print(collection.peek())
 
 
-def main() -> None:
-    downloads_folder = DOWNLOADS
+def load_from_config() -> None:
     config = load_settings()
     for law in config:
         if config[law]["desired"] is True and config[law]["loaded"] is False:
             filename = download_and_unzip(
-                url=config[law]["link"], destination=downloads_folder
+                url=config[law]["link"], destination=DOWNLOADS
             )
-            parags = extract_xml(source_dir=downloads_folder, source_file=filename)
+            parags = extract_xml(source_dir=DOWNLOADS, source_file=filename)
             chunked_parags = chunk_paragraphs(parags)
             embedded_parags = embed_paragraphs(chunked_parags)
             logger.info(f"Retrieved {law}.")
@@ -176,8 +189,8 @@ def main() -> None:
             config[law]["loaded"] = True
             config[law]["file"] = filename
             save_settings(config)
-    peek()
 
 
 if __name__ == "__main__":
-    main()
+    load_from_config()
+    peek()
