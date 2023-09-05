@@ -27,7 +27,7 @@ def echo(message, history, n_results, law_filter):
         yield response[: i + 1]
 
 
-def add_to_db(abbreviation: str, website: str, link: str) -> None:
+def add_to_db(abbreviation: str, website: str, link: str) -> tuple[None, dict, dict]:
     config_ = load_settings()
     if abbreviation in config_:
         if config_[abbreviation]["desired"] is True:
@@ -43,13 +43,23 @@ def add_to_db(abbreviation: str, website: str, link: str) -> None:
     }
     save_settings(config_)
     load_from_config()
+    return (
+        None,
+        gr.Dropdown.update(choices=[law for law in load_settings()]),
+        gr.Dropdown.update(choices=[law for law in load_settings()])
+    )
 
 
-def delete_from_db(abbreviation: str) -> None:
+def delete_from_db(abbreviation: str) -> tuple[None, dict, dict]:
     delete_from_chroma(law_code=abbreviation)
     config_ = load_settings()
     del config_[abbreviation]
     save_settings(config_)
+    return (
+        None,
+        gr.Dropdown.update(choices=[law for law in load_settings()]),
+        gr.Dropdown.update(choices=[law for law in load_settings()])
+    )
 
 
 def describe_loaded() -> str:
@@ -68,7 +78,7 @@ with gr.Blocks() as demo:
     show_latest.click(fn=describe_loaded, outputs=description)
 
     law_filter_ = gr.Dropdown(
-        label="Optionally limit the search to specific laws.",
+        label="Optionally limit the search to specific laws",
         choices=[law for law in load_settings()],
         multiselect=True,
     )
@@ -98,7 +108,6 @@ with gr.Blocks() as demo:
         status_add = gr.Textbox(label="Status", placeholder="Idle")
     with gr.Row():
         load_btn = gr.Button("Load")
-        load_btn.click(add_to_db, inputs=[abbreviation_add, website, link], outputs=[status_add])
     gr.Examples(
         examples=[
             ["BGB", "https://www.gesetze-im-internet.de/bgb/", "https://www.gesetze-im-internet.de/bgb/xml.zip"],
@@ -111,11 +120,25 @@ with gr.Blocks() as demo:
     )
     gr.Markdown("## Delete codes of laws")
     with gr.Row():
-        abbreviation_del = gr.Textbox(label="Abbreviation of the law", placeholder="E.g., BGB")
+        abbreviation_del = gr.Dropdown(
+            label="Abbreviation of the law to be deleted",
+            choices=[law for law in load_settings()],
+            multiselect=False,
+        )
         status_del = gr.Textbox(label="Status", placeholder="Idle")
     with gr.Row():
-        load_btn = gr.Button("Delete")
-        load_btn.click(delete_from_db, inputs=[abbreviation_del], outputs=[status_del])
+        del_btn = gr.Button("Delete")
+
+    load_btn.click(
+        fn=add_to_db,
+        inputs=[abbreviation_add, website, link],
+        outputs=[status_add, law_filter_, abbreviation_del]
+    )
+    del_btn.click(
+        fn=delete_from_db,
+        inputs=[abbreviation_del],
+        outputs=[status_del, law_filter_, abbreviation_del]
+    )
 
 
 if __name__ == "__main__":
