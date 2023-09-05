@@ -15,7 +15,8 @@ FRAGE:
 PROMPT_MAP_REDUCE = """\
 Beantworte die folgende Frage nur basierend auf dem bereitgestellten Kontext.
 Begründe deine Antwort mit einem knappen Satz.
-Falls es relevante Randbedingungen gibt, beschreibe diese in einem weiteren Satz.
+Falls es Voraussetzungen, Einschränkungen, oder Randbedingungen gibt, \
+beschreibe diese in einem weiteren Satz.
 Sollte der Kontext ungeeignet sein um die Frage zu beantworten, \
 antworte NUR mit dem einen Wort `irrelevant`.
 KONTEXT:
@@ -31,6 +32,8 @@ Begründe deine Antwort mit einem knappen Satz.
 Falls es relevante Randbedingungen gibt, beschreibe diese in einem weiteren Satz.
 Solltest du die Frage nicht rein basierend auf dem Kontext beantworten können, \
 antworte, dass du die Antwort nicht weißt.
+Sollte der Kontext widersprüchliche Informationen enthalten, \
+beschreibe diesen Widerspruch knapp.
 KONTEXT:
 {context}
 FRAGE:
