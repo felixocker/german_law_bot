@@ -8,6 +8,7 @@ import gradio as gr
 from ingest import (
     load_from_config,
     delete_from_chroma,
+    get_chroma_stats,
 )
 from qa import rag_query
 from utils import (
@@ -69,6 +70,7 @@ def delete_from_db(abbreviation: str) -> tuple[None, dict, dict, str]:
 def describe_loaded() -> str:
     config = load_settings()
     description_ = "<br>".join([law + ": " + config[law]["website"] for law in config])
+    description_ += "<br>" + get_chroma_stats()
     return description_
 
 

@@ -162,6 +162,14 @@ def delete_from_chroma(law_code: str) -> None:
     logger.info(f"Deleted {del_len} elements from the vector store for {law_code}.")
 
 
+def get_chroma_stats() -> str:
+    chroma_client = chromadb.PersistentClient(path="../data/chroma")
+    collection = chroma_client.get_or_create_collection(
+        name=COLLECTION_NAME, embedding_function=OPENAI_EF
+    )
+    return "Number of embeddings in the collection: " + str(collection.count())
+
+
 def peek() -> None:
     chroma_client = chromadb.PersistentClient(path="../data/chroma")
     collection = chroma_client.get_or_create_collection(
