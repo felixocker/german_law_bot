@@ -27,7 +27,9 @@ def echo(message, history, n_results, law_filter):
         yield response[: i + 1]
 
 
-def add_to_db(abbreviation: str, website: str, link: str) -> tuple[None, dict, dict, str]:
+def add_to_db(
+    abbreviation: str, website: str, link: str
+) -> tuple[None, dict, dict, str]:
     config_ = load_settings()
     if abbreviation in config_:
         if config_[abbreviation]["desired"] is True:
@@ -47,7 +49,7 @@ def add_to_db(abbreviation: str, website: str, link: str) -> tuple[None, dict, d
         None,
         gr.Dropdown.update(choices=[law for law in load_settings()]),
         gr.Dropdown.update(choices=[law for law in load_settings()]),
-        describe_loaded()
+        describe_loaded(),
     )
 
 
@@ -60,7 +62,7 @@ def delete_from_db(abbreviation: str) -> tuple[None, dict, dict, str]:
         None,
         gr.Dropdown.update(choices=[law for law in load_settings()]),
         gr.Dropdown.update(choices=[law for law in load_settings()]),
-        describe_loaded()
+        describe_loaded(),
     )
 
 
@@ -71,7 +73,6 @@ def describe_loaded() -> str:
 
 
 with gr.Blocks() as demo:
-
     gr.Markdown("# German law bot")
     gr.Markdown("## Information and settings")
 
@@ -98,22 +99,32 @@ with gr.Blocks() as demo:
 
     gr.Markdown("## Load additional codes of laws")
     with gr.Row():
-        abbreviation_add = gr.Textbox(label="Abbreviation of the law", placeholder="E.g., BGB")
+        abbreviation_add = gr.Textbox(
+            label="Abbreviation of the law", placeholder="E.g., BGB"
+        )
         website = gr.Textbox(
             label="Link to the online resource",
-            placeholder="E.g., https://www.gesetze-im-internet.de/bgb/"
+            placeholder="E.g., https://www.gesetze-im-internet.de/bgb/",
         )
         link = gr.Textbox(
             label="Link to the XML download",
-            placeholder="E.g., https://www.gesetze-im-internet.de/bgb/xml.zip"
+            placeholder="E.g., https://www.gesetze-im-internet.de/bgb/xml.zip",
         )
         status_add = gr.Textbox(label="Status", placeholder="Idle")
     with gr.Row():
         load_btn = gr.Button("Load")
     gr.Examples(
         examples=[
-            ["BGB", "https://www.gesetze-im-internet.de/bgb/", "https://www.gesetze-im-internet.de/bgb/xml.zip"],
-            ["EStG", "https://www.gesetze-im-internet.de/estg/", "https://www.gesetze-im-internet.de/estg/xml.zip"],
+            [
+                "BGB",
+                "https://www.gesetze-im-internet.de/bgb/",
+                "https://www.gesetze-im-internet.de/bgb/xml.zip",
+            ],
+            [
+                "EStG",
+                "https://www.gesetze-im-internet.de/estg/",
+                "https://www.gesetze-im-internet.de/estg/xml.zip",
+            ],
         ],
         inputs=[abbreviation_add, website, link],
         outputs=status_add,
@@ -134,12 +145,12 @@ with gr.Blocks() as demo:
     load_btn.click(
         fn=add_to_db,
         inputs=[abbreviation_add, website, link],
-        outputs=[status_add, law_filter_, abbreviation_del, description]
+        outputs=[status_add, law_filter_, abbreviation_del, description],
     )
     del_btn.click(
         fn=delete_from_db,
         inputs=[abbreviation_del],
-        outputs=[status_del, law_filter_, abbreviation_del, description]
+        outputs=[status_del, law_filter_, abbreviation_del, description],
     )
 
 

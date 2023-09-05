@@ -156,12 +156,8 @@ def delete_from_chroma(law_code: str) -> None:
     collection = chroma_client.get_or_create_collection(
         name="laws", embedding_function=OPENAI_EF
     )
-    del_len = len(collection.get(
-        where={"law": law_code}
-    ))
-    collection.delete(
-        where={"law": law_code}
-    )
+    del_len = len(collection.get(where={"law": law_code}))
+    collection.delete(where={"law": law_code})
     logger.info(f"Deleted {del_len} elements from the vector store for {law_code}.")
 
 
