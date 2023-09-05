@@ -27,7 +27,7 @@ def echo(message, history, n_results, law_filter):
         yield response[: i + 1]
 
 
-def add_to_db(abbreviation: str, website: str, link: str) -> tuple[None, dict, dict]:
+def add_to_db(abbreviation: str, website: str, link: str) -> tuple[None, dict, dict, str]:
     config_ = load_settings()
     if abbreviation in config_:
         if config_[abbreviation]["desired"] is True:
@@ -46,11 +46,12 @@ def add_to_db(abbreviation: str, website: str, link: str) -> tuple[None, dict, d
     return (
         None,
         gr.Dropdown.update(choices=[law for law in load_settings()]),
-        gr.Dropdown.update(choices=[law for law in load_settings()])
+        gr.Dropdown.update(choices=[law for law in load_settings()]),
+        describe_loaded()
     )
 
 
-def delete_from_db(abbreviation: str) -> tuple[None, dict, dict]:
+def delete_from_db(abbreviation: str) -> tuple[None, dict, dict, str]:
     delete_from_chroma(law_code=abbreviation)
     config_ = load_settings()
     del config_[abbreviation]
@@ -58,7 +59,8 @@ def delete_from_db(abbreviation: str) -> tuple[None, dict, dict]:
     return (
         None,
         gr.Dropdown.update(choices=[law for law in load_settings()]),
-        gr.Dropdown.update(choices=[law for law in load_settings()])
+        gr.Dropdown.update(choices=[law for law in load_settings()]),
+        describe_loaded()
     )
 
 
@@ -73,15 +75,15 @@ with gr.Blocks() as demo:
     gr.Markdown("# German law bot")
     gr.Markdown("## Information and settings")
 
-    show_latest = gr.Button("Update and show loaded codes of law")
-    description = gr.Markdown()
-    show_latest.click(fn=describe_loaded, outputs=description)
+    description = gr.Markdown(describe_loaded())
 
-    law_filter_ = gr.Dropdown(
-        label="Optionally limit the search to specific laws",
-        choices=[law for law in load_settings()],
-        multiselect=True,
-    )
+    with gr.Row():
+        law_filter_ = gr.Dropdown(
+            label="Optionally limit the search to specific laws",
+            choices=[law for law in load_settings()],
+            multiselect=True,
+        )
+
     n_results_ = gr.Number(
         value=5, label="Number of chunks to be considered", precision=0, render=False
     )
@@ -132,12 +134,12 @@ with gr.Blocks() as demo:
     load_btn.click(
         fn=add_to_db,
         inputs=[abbreviation_add, website, link],
-        outputs=[status_add, law_filter_, abbreviation_del]
+        outputs=[status_add, law_filter_, abbreviation_del, description]
     )
     del_btn.click(
         fn=delete_from_db,
         inputs=[abbreviation_del],
-        outputs=[status_del, law_filter_, abbreviation_del]
+        outputs=[status_del, law_filter_, abbreviation_del, description]
     )
 
 
