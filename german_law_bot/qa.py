@@ -90,15 +90,13 @@ def rag_query(
     irrelevant_srcs = None
     if n_results == 1:
         context = chunks_["documents"][0][0]
-        prompt = PROMPT_RAG.replace("<context>", context).replace("<question>", query)
+        prompt = PROMPT_RAG.format(context=context, question=query)
     elif n_results > 1:
         context = {}
         irrelevant_srcs = []
         for i in range(n_results):
             context_single = chunks_["documents"][0][i]
-            prompt = PROMPT_MAP_REDUCE.replace("<context>", context_single).replace(
-                "<question>", query
-            )
+            prompt = PROMPT_MAP_REDUCE.format(context=context_single, question=query)
             msgs = [{"role": "user", "content": prompt}]
             res = query_llm(msgs, model)
             if res.strip().lower() == "irrelevant":
@@ -115,9 +113,10 @@ def rag_query(
             context_summary = "\n".join(
                 [src + ": " + txt for src, txt in context.items()]
             )
-        prompt = PROMPT_MAP_REDUCE_SUMMARY.replace(
-            "<context>", context_summary
-        ).replace("<question>", query)
+        prompt = PROMPT_MAP_REDUCE_SUMMARY.format(
+            context=context_summary,
+            question=query,
+        )
     else:
         raise ValueError(f"n_results must be >= 0 but is {n_results}.")
     msgs = [{"role": "user", "content": prompt}]

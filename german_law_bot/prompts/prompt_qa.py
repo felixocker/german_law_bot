@@ -7,9 +7,9 @@ Falls es relevante Randbedingungen gibt, beschreibe diese in einem weiteren Satz
 Solltest du die Frage nicht rein basierend auf dem Kontext beantworten können, \
 antworte, dass du die Antwort nicht weißt.
 KONTEXT:
-<context>
+{context}
 FRAGE:
-<question>
+{question}
 """
 
 PROMPT_MAP_REDUCE = """\
@@ -19,9 +19,9 @@ Falls es relevante Randbedingungen gibt, beschreibe diese in einem weiteren Satz
 Sollte der Kontext ungeeignet sein um die Frage zu beantworten, \
 antworte NUR mit dem einen Wort `irrelevant`.
 KONTEXT:
-<context>
+{context}
 Frage:
-<question>
+{question}
 """
 
 PROMPT_MAP_REDUCE_SUMMARY = """\
@@ -32,7 +32,7 @@ Falls es relevante Randbedingungen gibt, beschreibe diese in einem weiteren Satz
 Solltest du die Frage nicht rein basierend auf dem Kontext beantworten können, \
 antworte, dass du die Antwort nicht weißt.
 KONTEXT:
-<context>
+{context}
 FRAGE:
-<question>
+{question}
 """
