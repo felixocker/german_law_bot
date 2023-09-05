@@ -12,7 +12,10 @@ from typing import (
     Dict,
 )
 
-from constants import OPENAI_EF
+from constants import (
+    COLLECTION_NAME,
+    OPENAI_EF,
+)
 from prompts.prompt_qa import (
     PROMPT_MAP_REDUCE,
     PROMPT_MAP_REDUCE_SUMMARY,
@@ -33,7 +36,7 @@ def retrieve_from_vdb(
     query_embedding = get_embedding(query)
     chroma_client = chromadb.PersistentClient(path="../data/chroma")
     collection = chroma_client.get_or_create_collection(
-        name="laws", embedding_function=OPENAI_EF
+        name=COLLECTION_NAME, embedding_function=OPENAI_EF
     )
     relevant_chunks = collection.query(
         query_embeddings=[query_embedding],

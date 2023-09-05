@@ -16,6 +16,7 @@ from io import BytesIO
 from zipfile import ZipFile
 
 from constants import (
+    COLLECTION_NAME,
     DOWNLOADS,
     OPENAI_EF,
 )
@@ -138,7 +139,7 @@ def embed_paragraphs(
 def load_into_chroma(parags: List[Paragraph]) -> None:
     chroma_client = chromadb.PersistentClient(path="../data/chroma")
     collection = chroma_client.get_or_create_collection(
-        name="laws", embedding_function=OPENAI_EF
+        name=COLLECTION_NAME, embedding_function=OPENAI_EF
     )
     collection.add(
         documents=[p.title + "\n\n" + p.text for p in parags],
@@ -154,7 +155,7 @@ def load_into_chroma(parags: List[Paragraph]) -> None:
 def delete_from_chroma(law_code: str) -> None:
     chroma_client = chromadb.PersistentClient(path="../data/chroma")
     collection = chroma_client.get_or_create_collection(
-        name="laws", embedding_function=OPENAI_EF
+        name=COLLECTION_NAME, embedding_function=OPENAI_EF
     )
     del_len = len(collection.get(where={"law": law_code}))
     collection.delete(where={"law": law_code})
@@ -164,7 +165,7 @@ def delete_from_chroma(law_code: str) -> None:
 def peek() -> None:
     chroma_client = chromadb.PersistentClient(path="../data/chroma")
     collection = chroma_client.get_or_create_collection(
-        name="laws", embedding_function=OPENAI_EF
+        name=COLLECTION_NAME, embedding_function=OPENAI_EF
     )
     print(collection.peek())
 
