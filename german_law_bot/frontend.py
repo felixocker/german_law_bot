@@ -99,6 +99,16 @@ with gr.Blocks() as demo:
     with gr.Row():
         load_btn = gr.Button("Load")
         load_btn.click(add_to_db, inputs=[abbreviation_add, website, link], outputs=[status_add])
+    gr.Examples(
+        examples=[
+            ["BGB", "https://www.gesetze-im-internet.de/bgb/", "https://www.gesetze-im-internet.de/bgb/xml.zip"],
+            ["EStG", "https://www.gesetze-im-internet.de/estg/", "https://www.gesetze-im-internet.de/estg/xml.zip"],
+        ],
+        inputs=[abbreviation_add, website, link],
+        outputs=status_add,
+        fn=add_to_db,
+        cache_examples=False,
+    )
     gr.Markdown("## Delete codes of laws")
     with gr.Row():
         abbreviation_del = gr.Textbox(label="Abbreviation of the law", placeholder="E.g., BGB")
