@@ -107,7 +107,10 @@ def rag_query(
             context[sources[i]] = res
         sources = [s for s in sources if s not in irrelevant_srcs]
         if not sources:
-            return f"Keine relevanten Informationen verfuegbar (geprueft: {', '.join(irrelevant_srcs)})."
+            return (
+                f"Keine relevanten Informationen verfuegbar"
+                f"(geprueft: {', '.join(irrelevant_srcs)})."
+            )
         else:
             context_summary = "\n".join(
                 [src + ": " + txt for src, txt in context.items()]
@@ -116,7 +119,7 @@ def rag_query(
             "<context>", context_summary
         ).replace("<question>", query)
     else:
-        raise ValueError(f"n_results must be >= 0.")
+        raise ValueError(f"n_results must be >= 0 but is {n_results}.")
     msgs = [{"role": "user", "content": prompt}]
     res = query_llm(msgs, model)
     logger.info(f"Got response: `{res}`.")
@@ -134,5 +137,5 @@ if __name__ == "__main__":
         mr = rag_query(query=question, n_results=5)
         print("ANTWORT:\n" + mr)
     # Example:
-    # Gilt die Überführung eines Wirtschaftsguts in das Privatvermögen des Steuerpflichtigen durch
-    # Entnahme als Anschaffung?
+    # Gilt die Überführung eines Wirtschaftsguts in das Privatvermögen des
+    # Steuerpflichtigen durch Entnahme als Anschaffung?

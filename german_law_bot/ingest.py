@@ -37,7 +37,7 @@ def download_and_unzip(url: str, destination: str) -> str:
     logger.info("Download done.")
     files_ = [f for f in zipfile.namelist() if f.endswith(".xml")]
     print(files_)
-    assert len(files_) == 1, f"Download does not contain exactly one XML."
+    assert len(files_) == 1, "Download does not contain exactly one XML."
     return files_[0]
 
 
