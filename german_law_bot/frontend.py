@@ -86,7 +86,7 @@ with gr.Blocks() as demo:
 
     gr.Markdown("## Load additional codes of laws")
     with gr.Row():
-        abbreviation = gr.Textbox(label="Abbreviation of the law", placeholder="E.g., BGB")
+        abbreviation_add = gr.Textbox(label="Abbreviation of the law", placeholder="E.g., BGB")
         website = gr.Textbox(
             label="Link to the online resource",
             placeholder="E.g., https://www.gesetze-im-internet.de/bgb/"
@@ -95,13 +95,17 @@ with gr.Blocks() as demo:
             label="Link to the XML download",
             placeholder="E.g., https://www.gesetze-im-internet.de/bgb/xml.zip"
         )
+        status_add = gr.Textbox(label="Status", placeholder="Idle")
+    with gr.Row():
         load_btn = gr.Button("Load")
-        load_btn.click(add_to_db, inputs=[abbreviation, website, link])
+        load_btn.click(add_to_db, inputs=[abbreviation_add, website, link], outputs=[status_add])
     gr.Markdown("## Delete codes of laws")
     with gr.Row():
-        abbreviation = gr.Textbox(label="Abbreviation of the law", placeholder="E.g., BGB")
+        abbreviation_del = gr.Textbox(label="Abbreviation of the law", placeholder="E.g., BGB")
+        status_del = gr.Textbox(label="Status", placeholder="Idle")
+    with gr.Row():
         load_btn = gr.Button("Delete")
-        load_btn.click(delete_from_db, inputs=[abbreviation])
+        load_btn.click(delete_from_db, inputs=[abbreviation_del], outputs=[status_del])
 
 
 if __name__ == "__main__":
