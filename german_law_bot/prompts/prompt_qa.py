@@ -39,3 +39,29 @@ KONTEXT:
 FRAGE:
 {question}
 """
+
+PROMPT_SB_GEN_QUESTION = """\
+Nimm die Rolle eines freundlichen und hilfreichen Lernpartners ein.
+Erstelle hierfür basierend auf dem im Folgenden gegebenen Kontext eine Frage.
+Diese Frage soll geeignet sein, um yu prüfen, ob der Partner das Gesetz kennt \
+und verstanden hat.
+Antworte NUR mit der generierten Frage.
+KONTEXT:
+{context}
+"""
+
+PROMPT_SB_ASSESS_ANSWER = """\
+Nimm die Rolle eines freundlichen und hilfreichen Lernpartners ein.
+Ein Lernender sollte die später genannte Frage beantworten.
+Beurteile basierend auf dem gegebenen Kontext, \
+ob der Lösungsvorschlag des Lernenden korrekt ist.
+Falls der Lösungsvorschlag falsch ist, gib eine knappe und präzise \
+Erklärung der richtigen Antwort.
+Antworte NUR mit der Bewertung des Lösungsvorschlags und einer Erklärung.
+FRAGE:
+{question}
+KONTEXT:
+{context}
+LÖSUNGSVORSCHLAG DES LERNENDEN:
+{response}
+"""

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import random
 
 import chromadb
 import openai
@@ -20,6 +21,8 @@ from prompts.prompt_qa import (
     PROMPT_MAP_REDUCE,
     PROMPT_MAP_REDUCE_SUMMARY,
     PROMPT_RAG,
+    PROMPT_SB_GEN_QUESTION,
+    PROMPT_SB_ASSESS_ANSWER,
 )
 from utils import get_embedding
 
@@ -82,12 +85,7 @@ def rag_query(
     """Answer query using Retrieval Augmented Generation.
     Use map reduce if the number of chunks to be considered is set to be larger than 1.
     """
-    if not law_filter:
-        law_filter = {}
-    elif len(law_filter) == 1:
-        law_filter = {"law": law_filter[0]}
-    else:
-        law_filter = {"$or": [{"law": lf} for lf in law_filter]}
+    law_filter = set_law_filter(law_filter)
     chunks_ = retrieve_from_vdb(query=query, n=n_results, where_filter=law_filter)
     sources = chunks_["ids"][0]
     irrelevant_srcs = None
@@ -129,6 +127,35 @@ def rag_query(
     if irrelevant_srcs:
         response += f" (Auch geprueft: {', '.join(irrelevant_srcs)})"
     return response
+
+
+def set_law_filter(law_filter) -> dict:
+    if not law_filter:
+        law_filter = {}
+    elif len(law_filter) == 1:
+        law_filter = {"law": law_filter[0]}
+    else:
+        law_filter = {"$or": [{"law": lf} for lf in law_filter]}
+    return law_filter
+
+
+def generate_question(context: str, n_results: int, law_filter: List[str]) -> tuple[str, str]:
+    law_filter = set_law_filter(law_filter)
+    chunks = retrieve_from_vdb(query=context, where_filter=law_filter, n=n_results)
+    chunk_id = random.randrange(0, n_results)
+    context_id = chunks["ids"][0][chunk_id]
+    context_chunk = chunks["documents"][0][chunk_id]
+    context = context_id + ": " + context_chunk
+    prompt = PROMPT_SB_GEN_QUESTION.format(context=context)
+    msgs = [{"role": "user", "content": prompt}]
+    res = query_llm(msgs)
+    return context, res
+
+
+def assess_answer(question: str, background: str, response: str, model: str = "gpt-4"):
+    prompt = PROMPT_SB_ASSESS_ANSWER.format(question=question, context=background, response=response)
+    msgs = [{"role": "user", "content": prompt}]
+    return query_llm(msgs, model=model)
 
 
 if __name__ == "__main__":
