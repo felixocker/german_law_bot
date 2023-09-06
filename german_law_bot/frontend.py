@@ -76,73 +76,78 @@ def describe_loaded() -> str:
 
 with gr.Blocks() as demo:
     gr.Markdown("# German law bot")
-    gr.Markdown("## Information and settings")
 
-    description = gr.Markdown(describe_loaded())
+    with gr.Tab("Settings"):
+        gr.Markdown("## Information and settings")
 
-    with gr.Row():
-        law_filter_ = gr.Dropdown(
-            label="Optionally limit the search to specific laws",
-            choices=[law for law in load_settings()],
-            multiselect=True,
-        )
+        description = gr.Markdown(describe_loaded())
 
-    n_results_ = gr.Number(
-        value=5, label="Number of chunks to be considered", precision=0, render=False
-    )
-
-    gr.ChatInterface(
-        echo,
-        additional_inputs=[
-            n_results_,
-            law_filter_,
-        ],
-    )
-
-    gr.Markdown("## Load additional codes of laws")
-    with gr.Row():
-        abbreviation_add = gr.Textbox(
-            label="Abbreviation of the law", placeholder="E.g., BGB"
-        )
-        website = gr.Textbox(
-            label="Link to the online resource",
-            placeholder="E.g., https://www.gesetze-im-internet.de/bgb/",
-        )
-        link = gr.Textbox(
-            label="Link to the XML download",
-            placeholder="E.g., https://www.gesetze-im-internet.de/bgb/xml.zip",
-        )
-        status_add = gr.Textbox(label="Status", placeholder="Idle")
-    with gr.Row():
-        load_btn = gr.Button("Load")
-    gr.Examples(
-        examples=[
-            [
-                "BGB",
-                "https://www.gesetze-im-internet.de/bgb/",
-                "https://www.gesetze-im-internet.de/bgb/xml.zip",
+        gr.Markdown("## Load additional codes of laws")
+        with gr.Row():
+            abbreviation_add = gr.Textbox(
+                label="Abbreviation of the law", placeholder="E.g., BGB"
+            )
+            website = gr.Textbox(
+                label="Link to the online resource",
+                placeholder="E.g., https://www.gesetze-im-internet.de/bgb/",
+            )
+            link = gr.Textbox(
+                label="Link to the XML download",
+                placeholder="E.g., https://www.gesetze-im-internet.de/bgb/xml.zip",
+            )
+            status_add = gr.Textbox(label="Status", placeholder="Idle")
+        with gr.Row():
+            load_btn = gr.Button("Load")
+        gr.Examples(
+            examples=[
+                [
+                    "BGB",
+                    "https://www.gesetze-im-internet.de/bgb/",
+                    "https://www.gesetze-im-internet.de/bgb/xml.zip",
+                ],
+                [
+                    "EStG",
+                    "https://www.gesetze-im-internet.de/estg/",
+                    "https://www.gesetze-im-internet.de/estg/xml.zip",
+                ],
             ],
-            [
-                "EStG",
-                "https://www.gesetze-im-internet.de/estg/",
-                "https://www.gesetze-im-internet.de/estg/xml.zip",
-            ],
-        ],
-        inputs=[abbreviation_add, website, link],
-        outputs=status_add,
-        fn=add_to_db,
-        cache_examples=False,
-    )
-    gr.Markdown("## Delete codes of laws")
-    with gr.Row():
-        abbreviation_del = gr.Dropdown(
-            label="Abbreviation of the law to be deleted",
-            choices=[law for law in load_settings()],
-            multiselect=False,
+            inputs=[abbreviation_add, website, link],
+            outputs=status_add,
+            fn=add_to_db,
+            cache_examples=False,
         )
-        status_del = gr.Textbox(label="Status", placeholder="Idle")
-    with gr.Row():
-        del_btn = gr.Button("Delete")
+        gr.Markdown("## Delete codes of laws")
+        with gr.Row():
+            abbreviation_del = gr.Dropdown(
+                label="Abbreviation of the law to be deleted",
+                choices=[law for law in load_settings()],
+                multiselect=False,
+            )
+            status_del = gr.Textbox(label="Status", placeholder="Idle")
+        with gr.Row():
+            del_btn = gr.Button("Delete")
+
+    with gr.Tab("QA bot"):
+        gr.Markdown("## QA bot for German laws")
+
+        with gr.Row():
+            law_filter_ = gr.Dropdown(
+                label="Optionally limit the search to specific laws",
+                choices=[law for law in load_settings()],
+                multiselect=True,
+            )
+
+        n_results_ = gr.Number(
+            value=5, label="Number of chunks to be considered", precision=0, render=False
+        )
+
+        gr.ChatInterface(
+            echo,
+            additional_inputs=[
+                n_results_,
+                law_filter_,
+            ],
+        )
 
     load_btn.click(
         fn=add_to_db,
