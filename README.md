@@ -18,15 +18,16 @@ To get good results, be as precise as possible with your prompts.
 
 
 ## Usage
-* Specify the codes of law you need in `config.yaml` (provide the download links for the XML zips)
-* Load the data: `python ingest.py`
-* Run
-  * In CLI: `python qa.py`
-  * In your browser: `python frontend.py`
+* Run in browser: `python frontend.py`
+* (Limited) command line user:
+  * Specify the codes of law you need in `config.yaml` (provide the download links for the XML zips)
+  * Load the data: `python ingest.py`
+  * Run: `python qa.py`
 
 
 ## Ideas
 * :speech_balloon: Basic QA for German laws
+* :student:	Study buddy for learning about German laws
 * :telescope: A bot for coming up with legal arguments for specific cases based on German laws :construction:
 
 
