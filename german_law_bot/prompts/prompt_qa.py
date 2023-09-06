@@ -15,8 +15,7 @@ FRAGE:
 PROMPT_MAP_REDUCE = """\
 Beantworte die folgende Frage nur basierend auf dem bereitgestellten Kontext.
 Begründe deine Antwort mit einem knappen Satz.
-Falls es Voraussetzungen, Einschränkungen, oder Randbedingungen gibt, \
-beschreibe diese in einem weiteren Satz.
+Beschreibe in einem weiteren Satz die Voraussetzungen für die Anwendbarkeit dieses Gesetzes.
 Sollte der Kontext ungeeignet sein um die Frage zu beantworten, \
 antworte NUR mit dem einen Wort `irrelevant`.
 KONTEXT:
@@ -29,8 +28,9 @@ PROMPT_MAP_REDUCE_SUMMARY = """\
 Beantworte die folgende Frage nur basierend auf dem folgenden Kontext, \
 welcher aus den gegebenen Ausschnitten zusammengefasst wurde.
 Begründe deine Antwort mit einem knappen Satz.
-Falls es relevante Randbedingungen gibt, beschreibe diese in einem weiteren Satz.
-Solltest du die Frage nicht rein basierend auf dem Kontext beantworten können, \
+Beschreibe in einem weiteren Satz die Voraussetzungen für die Anwendbarkeit der \
+relevanten Gesetzes.
+Sollte die Frage nicht rein basierend auf dem Kontext beantwortbar sein, \
 antworte, dass du die Antwort nicht weißt.
 Sollte der Kontext widersprüchliche Informationen enthalten, \
 beschreibe diesen Widerspruch knapp.
