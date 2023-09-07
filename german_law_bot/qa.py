@@ -55,6 +55,7 @@ def retrieve_from_vdb(
 def query_llm(
     msgs: List[Dict[str, str]],
     model: str = "gpt-3.5-turbo",
+    temperature: float = .0,
 ) -> str:
     logger.info(f"Sending query: {msgs}.")
     response = None
@@ -63,7 +64,7 @@ def query_llm(
             response = openai.ChatCompletion.create(
                 model=model,
                 messages=msgs,
-                temperature=0,
+                temperature=temperature,
             )
         except openai.error.APIError as e:
             logger.error(e)
@@ -150,7 +151,7 @@ def generate_question(
     context = context_id + ": " + context_chunk
     prompt = PROMPT_SB_GEN_QUESTION.format(context=context)
     msgs = [{"role": "user", "content": prompt}]
-    res = query_llm(msgs)
+    res = query_llm(msgs, temperature=.8)
     return context, res
 
 
