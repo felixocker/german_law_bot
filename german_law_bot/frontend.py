@@ -224,6 +224,9 @@ with gr.Blocks() as demo:
                 placeholder="To be generated...",
             )
 
+        with gr.Row():
+            gr.ClearButton(components=[content_sb, question_sb, input_sb, solution_sb])
+
     load_btn.click(
         fn=add_to_db,
         inputs=[abbreviation_add, website, link],
