@@ -38,7 +38,9 @@ def echo(message, n_results, law_filter):
 
 def gen_question_sb(context, n_results, law_filter):
     logger.info(f"Generating question for context {context}")
-    background, response = generate_question(context=context, n_results=n_results, law_filter=law_filter)
+    background, response = generate_question(
+        context=context, n_results=n_results, law_filter=law_filter
+    )
     global SB_CONTEXT
     SB_CONTEXT = background
     global SB_QUESTION
@@ -49,7 +51,9 @@ def gen_question_sb(context, n_results, law_filter):
 def rate_response_sb(response):
     global SB_CONTEXT
     global SB_QUESTION
-    response = assess_answer(question=SB_QUESTION, background=SB_CONTEXT, response=response)
+    response = assess_answer(
+        question=SB_QUESTION, background=SB_CONTEXT, response=response
+    )
     response += "\n\nQUELLE:\n\n" + SB_CONTEXT
     return response
 
@@ -165,7 +169,10 @@ with gr.Blocks() as demo:
         )
 
         n_results_ = gr.Number(
-            value=5, label="Number of chunks to be considered", precision=0, render=False
+            value=5,
+            label="Number of chunks to be considered",
+            precision=0,
+            render=False,
         )
 
         gr.ChatInterface(

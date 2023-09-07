@@ -139,7 +139,9 @@ def set_law_filter(law_filter) -> dict:
     return law_filter
 
 
-def generate_question(context: str, n_results: int, law_filter: List[str]) -> tuple[str, str]:
+def generate_question(
+    context: str, n_results: int, law_filter: List[str]
+) -> tuple[str, str]:
     law_filter = set_law_filter(law_filter)
     chunks = retrieve_from_vdb(query=context, where_filter=law_filter, n=n_results)
     chunk_id = random.randrange(0, n_results)
@@ -153,7 +155,9 @@ def generate_question(context: str, n_results: int, law_filter: List[str]) -> tu
 
 
 def assess_answer(question: str, background: str, response: str, model: str = "gpt-4"):
-    prompt = PROMPT_SB_ASSESS_ANSWER.format(question=question, context=background, response=response)
+    prompt = PROMPT_SB_ASSESS_ANSWER.format(
+        question=question, context=background, response=response
+    )
     msgs = [{"role": "user", "content": prompt}]
     return query_llm(msgs, model=model)
 

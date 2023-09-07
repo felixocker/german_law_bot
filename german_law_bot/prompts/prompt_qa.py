@@ -15,7 +15,8 @@ FRAGE:
 PROMPT_MAP_REDUCE = """\
 Beantworte die folgende Frage nur basierend auf dem bereitgestellten Kontext.
 Begründe deine Antwort mit einem knappen Satz.
-Beschreibe in einem weiteren Satz die Voraussetzungen für die Anwendbarkeit dieses Gesetzes.
+Beschreibe in einem weiteren Satz die Voraussetzungen für die Anwendbarkeit \
+dieses Gesetzes.
 Sollte der Kontext ungeeignet sein um die Frage zu beantworten, \
 antworte NUR mit dem einen Wort `irrelevant`.
 KONTEXT:
