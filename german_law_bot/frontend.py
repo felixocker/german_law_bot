@@ -5,6 +5,7 @@ import time
 
 import gradio as gr
 
+from constants import AUTO_LAUNCH_BROWSER
 from ingest import (
     load_from_config,
     delete_from_chroma,
@@ -250,4 +251,4 @@ with gr.Blocks() as demo:
 
 
 if __name__ == "__main__":
-    demo.queue().launch(share=False)
+    demo.queue().launch(share=False, inbrowser=AUTO_LAUNCH_BROWSER)

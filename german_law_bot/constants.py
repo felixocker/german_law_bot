@@ -20,3 +20,5 @@ COLLECTION_NAME = "laws"
 OPENAI_EF = embedding_functions.OpenAIEmbeddingFunction(
     api_key=OPENAI_API_KEY, model_name=EMBEDDING_MODEL
 )
+
+AUTO_LAUNCH_BROWSER: bool = True
