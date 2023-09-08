@@ -16,8 +16,9 @@ from io import BytesIO
 from zipfile import ZipFile
 
 from constants import (
+    CHROMA_DIR,
     COLLECTION_NAME,
-    DOWNLOADS,
+    DOWNLOADS_DIR,
     OPENAI_EF,
 )
 from utils import (
@@ -137,7 +138,7 @@ def embed_paragraphs(
 
 
 def load_into_chroma(parags: List[Paragraph]) -> None:
-    chroma_client = chromadb.PersistentClient(path="../data/chroma")
+    chroma_client = chromadb.PersistentClient(path=CHROMA_DIR)
     collection = chroma_client.get_or_create_collection(
         name=COLLECTION_NAME, embedding_function=OPENAI_EF
     )
@@ -153,7 +154,7 @@ def load_into_chroma(parags: List[Paragraph]) -> None:
 
 
 def delete_from_chroma(law_code: str) -> None:
-    chroma_client = chromadb.PersistentClient(path="../data/chroma")
+    chroma_client = chromadb.PersistentClient(path=CHROMA_DIR)
     collection = chroma_client.get_or_create_collection(
         name=COLLECTION_NAME, embedding_function=OPENAI_EF
     )
@@ -163,7 +164,7 @@ def delete_from_chroma(law_code: str) -> None:
 
 
 def get_chroma_stats() -> str:
-    chroma_client = chromadb.PersistentClient(path="../data/chroma")
+    chroma_client = chromadb.PersistentClient(path=CHROMA_DIR)
     collection = chroma_client.get_or_create_collection(
         name=COLLECTION_NAME, embedding_function=OPENAI_EF
     )
@@ -171,7 +172,7 @@ def get_chroma_stats() -> str:
 
 
 def peek() -> None:
-    chroma_client = chromadb.PersistentClient(path="../data/chroma")
+    chroma_client = chromadb.PersistentClient(path=CHROMA_DIR)
     collection = chroma_client.get_or_create_collection(
         name=COLLECTION_NAME, embedding_function=OPENAI_EF
     )
@@ -183,9 +184,9 @@ def load_from_config() -> None:
     for law in config:
         if config[law]["desired"] is True and config[law]["loaded"] is False:
             filename = download_and_unzip(
-                url=config[law]["link"], destination=DOWNLOADS
+                url=config[law]["link"], destination=DOWNLOADS_DIR
             )
-            parags = extract_xml(source_dir=DOWNLOADS, source_file=filename)
+            parags = extract_xml(source_dir=DOWNLOADS_DIR, source_file=filename)
             chunked_parags = chunk_paragraphs(parags)
             embedded_parags = embed_paragraphs(chunked_parags)
             logger.info(f"Retrieved {law}.")

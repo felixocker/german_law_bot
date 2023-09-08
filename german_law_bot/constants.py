@@ -13,7 +13,8 @@ if OPENAI_API_KEY is None:
 EMBEDDING_MODEL = "text-embedding-ada-002"
 
 CONFIG = "config.yaml"
-DOWNLOADS = "../data/downloads/"
+DOWNLOADS_DIR = "../data/downloads/"
+CHROMA_DIR = "../data/chroma"
 
 COLLECTION_NAME = "laws"
 

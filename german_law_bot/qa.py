@@ -14,6 +14,7 @@ from typing import (
 )
 
 from constants import (
+    CHROMA_DIR,
     COLLECTION_NAME,
     OPENAI_EF,
 )
@@ -37,7 +38,7 @@ def retrieve_from_vdb(
     n: int = 3,
 ) -> dict:
     query_embedding = get_embedding(query)
-    chroma_client = chromadb.PersistentClient(path="../data/chroma")
+    chroma_client = chromadb.PersistentClient(path=CHROMA_DIR)
     collection = chroma_client.get_or_create_collection(
         name=COLLECTION_NAME, embedding_function=OPENAI_EF
     )
