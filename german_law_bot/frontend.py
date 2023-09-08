@@ -5,7 +5,11 @@ import time
 
 import gradio as gr
 
-from constants import AUTO_LAUNCH_BROWSER
+from constants import (
+    AUTO_LAUNCH_BROWSER,
+    BASE_CHAT_MODEL,
+    CHAT_MODELS,
+)
 from ingest import (
     load_from_config,
     delete_from_chroma,
@@ -26,12 +30,20 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+MODEL = BASE_CHAT_MODEL
 SB_CONTEXT: str = ""
 SB_QUESTION: str = ""
 
 
+def set_model(model_) -> None:
+    global MODEL
+    MODEL = model_
+    logger.info(f"Set model to {model_}")
+
+
 def echo(message, history, n_results, law_filter):
-    response = rag_query(query=message, n_results=n_results, law_filter=law_filter)
+    global MODEL
+    response = rag_query(query=message, n_results=n_results, law_filter=law_filter, model=MODEL)
     for i, _ in enumerate(response):
         time.sleep(0.02)
         yield response[: i + 1]
@@ -39,21 +51,18 @@ def echo(message, history, n_results, law_filter):
 
 def gen_question_sb(context, n_results, law_filter):
     logger.info(f"Generating question for context {context}")
+    global MODEL, SB_CONTEXT, SB_QUESTION
     background, response = generate_question(
-        context=context, n_results=n_results, law_filter=law_filter
+        context=context, n_results=n_results, law_filter=law_filter, model=MODEL
     )
-    global SB_CONTEXT
-    SB_CONTEXT = background
-    global SB_QUESTION
-    SB_QUESTION = response
+    SB_CONTEXT, SB_QUESTION = background, response
     return response
 
 
 def rate_response_sb(response):
-    global SB_CONTEXT
-    global SB_QUESTION
+    global MODEL, SB_CONTEXT, SB_QUESTION
     response = assess_answer(
-        question=SB_QUESTION, background=SB_CONTEXT, response=response
+        question=SB_QUESTION, background=SB_CONTEXT, response=response, model=MODEL
     )
     response += "\n\nQUELLE:\n\n" + SB_CONTEXT
     return response
@@ -114,6 +123,15 @@ with gr.Blocks() as demo:
         gr.Markdown("## Information and settings")
 
         description = gr.Markdown(describe_loaded())
+
+        with gr.Row():
+            model_ = gr.Dropdown(
+                label="Choose an LLM to use, gpt-4 may be more exact but is slower and more expensive",
+                choices=list(CHAT_MODELS),
+                value=BASE_CHAT_MODEL,
+                multiselect=False,
+            )
+            set_model_btn = gr.Button("Set model")
 
         gr.Markdown("## Load additional codes of laws")
         with gr.Row():
@@ -228,6 +246,10 @@ with gr.Blocks() as demo:
         with gr.Row():
             gr.ClearButton(components=[content_sb, question_sb, input_sb, solution_sb])
 
+    set_model_btn.click(
+        fn=set_model,
+        inputs=[model_],
+    )
     load_btn.click(
         fn=add_to_db,
         inputs=[abbreviation_add, website, link],

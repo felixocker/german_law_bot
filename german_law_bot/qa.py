@@ -14,6 +14,7 @@ from typing import (
 )
 
 from constants import (
+    BASE_CHAT_MODEL,
     CHROMA_DIR,
     COLLECTION_NAME,
     OPENAI_EF,
@@ -55,7 +56,7 @@ def retrieve_from_vdb(
 
 def query_llm(
     msgs: List[Dict[str, str]],
-    model: str = "gpt-3.5-turbo",
+    model: str = BASE_CHAT_MODEL,
     temperature: float = .0,
 ) -> str:
     logger.info(f"Sending query: {msgs}.")
@@ -80,7 +81,7 @@ def query_llm(
 
 def rag_query(
     query: str,
-    model: str = "gpt-3.5-turbo",
+    model: str = BASE_CHAT_MODEL,
     n_results: int = 3,
     law_filter: List[str] = None,
 ) -> str:
@@ -142,7 +143,10 @@ def set_law_filter(law_filter) -> dict:
 
 
 def generate_question(
-    context: str, n_results: int, law_filter: List[str]
+    context: str,
+    n_results: int,
+    law_filter: List[str],
+    model: str = BASE_CHAT_MODEL,
 ) -> tuple[str, str]:
     law_filter = set_law_filter(law_filter)
     chunks = retrieve_from_vdb(query=context, where_filter=law_filter, n=n_results)
@@ -152,11 +156,16 @@ def generate_question(
     context = context_id + ": " + context_chunk
     prompt = PROMPT_SB_GEN_QUESTION.format(context=context)
     msgs = [{"role": "user", "content": prompt}]
-    res = query_llm(msgs, temperature=.8)
+    res = query_llm(msgs, temperature=.8, model=model)
     return context, res
 
 
-def assess_answer(question: str, background: str, response: str, model: str = "gpt-4"):
+def assess_answer(
+    question: str,
+    background: str,
+    response: str,
+    model: str = BASE_CHAT_MODEL
+) -> str:
     prompt = PROMPT_SB_ASSESS_ANSWER.format(
         question=question, context=background, response=response
     )
