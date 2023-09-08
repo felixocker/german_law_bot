@@ -43,7 +43,9 @@ def set_model(model_) -> None:
 
 def echo(message, history, n_results, law_filter):
     global MODEL
-    response = rag_query(query=message, n_results=n_results, law_filter=law_filter, model=MODEL)
+    response = rag_query(
+        query=message, n_results=n_results, law_filter=law_filter, model=MODEL
+    )
     for i, _ in enumerate(response):
         time.sleep(0.02)
         yield response[: i + 1]
@@ -126,7 +128,10 @@ with gr.Blocks() as demo:
 
         with gr.Row():
             model_ = gr.Dropdown(
-                label="Choose an LLM to use, gpt-4 may be more exact but is slower and more expensive",
+                label=(
+                    "Choose an LLM to use, "
+                    "gpt-4 may be more exact but is slower and more expensive"
+                ),
                 choices=list(CHAT_MODELS),
                 value=BASE_CHAT_MODEL,
                 multiselect=False,

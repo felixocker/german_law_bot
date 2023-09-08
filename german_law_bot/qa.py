@@ -57,7 +57,7 @@ def retrieve_from_vdb(
 def query_llm(
     msgs: List[Dict[str, str]],
     model: str = BASE_CHAT_MODEL,
-    temperature: float = .0,
+    temperature: float = 0.0,
 ) -> str:
     logger.info(f"Sending query: {msgs}.")
     response = None
@@ -156,15 +156,12 @@ def generate_question(
     context = context_id + ": " + context_chunk
     prompt = PROMPT_SB_GEN_QUESTION.format(context=context)
     msgs = [{"role": "user", "content": prompt}]
-    res = query_llm(msgs, temperature=.8, model=model)
+    res = query_llm(msgs, temperature=0.8, model=model)
     return context, res
 
 
 def assess_answer(
-    question: str,
-    background: str,
-    response: str,
-    model: str = BASE_CHAT_MODEL
+    question: str, background: str, response: str, model: str = BASE_CHAT_MODEL
 ) -> str:
     prompt = PROMPT_SB_ASSESS_ANSWER.format(
         question=question, context=background, response=response
