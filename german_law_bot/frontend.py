@@ -235,6 +235,11 @@ with gr.Blocks() as demo:
             )
 
         with gr.Row():
+            show_hint_btn_sb = gr.Button("Show hint")
+            hide_hint_btn_sb = gr.Button("Hide hint")
+        hint_sb = gr.Textbox("", label="Hint", visible=False)
+
+        with gr.Row():
             input_sb = gr.Textbox(
                 label="Your answer",
             )
@@ -269,6 +274,14 @@ with gr.Blocks() as demo:
         fn=gen_question_sb,
         inputs=[content_sb, n_results_sb, law_filter_sb],
         outputs=[question_sb],
+    )
+    show_hint_btn_sb.click(
+        fn=lambda value: gr.Textbox.update(value=SB_CONTEXT, visible=True),
+        outputs=[hint_sb],
+    )
+    hide_hint_btn_sb.click(
+        fn=lambda value: gr.Textbox.update(value="", visible=False),
+        outputs=[hint_sb],
     )
     submit_btn_sb.click(
         fn=rate_response_sb,
