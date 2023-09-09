@@ -33,13 +33,11 @@ To get good results, be as precise as possible with your prompts.
 
 ## Examples
 
-### EStG
-FRAGE: _Gilt die Überführung eines Wirtschaftsguts in das Privatvermögen des Steuerpflichtigen durch Entnahme als Anschaffung?_ \
-ANTWORT: _Ja, die Überführung eines Wirtschaftsguts in das Privatvermögen des Steuerpflichtigen durch Entnahme gilt als Anschaffung. Quelle: EStG_23_
+### QA Bot
+<img src="https://github.com/felixocker/german_law_bot/raw/main/docs/qa-bot.gif" alt="QA bot" width="800"/>
 
-### BGB
-FRAGE: _Wer trägt im Widerrufsfall bei einem Verbrauchervertrag die Gefahr der Rücksendung der Waren?_ \
-ANTWORT: _Der Verbraucher trägt bei Widerruf bei einem Verbrauchervertrag die Gefahr der Rücksendung der Waren. Quelle: BGB_355, BGB_357d (Auch geprueft: BGB_357e)_
+### Study buddy
+<img src="https://github.com/felixocker/german_law_bot/raw/main/docs/studybuddy.gif" alt="Study buddy" width="800"/>
 
 
 ## Sources
