@@ -1,28 +1,7 @@
 # :judge: german_law_bot
-A bot for QA over German law. \
+A QA bot and a study buddy for German law. \
 Disclaimer: This bot does not, and is not intended to, constitute legal advice. \
 To get good results, be as precise as possible with your prompts.
-
-
-## Contents
-* german_law_bot
-  * `config.yaml` - settings for what to load
-  * `constants.py` - some generic settings
-  * `frontend.py` - gradio-based frontend
-  * `ingest.py` - download codes of law, extract data, feed into vector store
-  * `qa.py` - QA using RAG
-  * `utils.py` - utilities that are reused across modules
-* data
-  * `chroma/` - the persistent vector store lives here
-  * `downloads/` - source files are stored here
-
-
-## Usage
-* Run in browser: `python frontend.py`
-* (Limited) command line user:
-  * Specify the codes of law you need in `config.yaml` (provide the download links for the XML zips)
-  * Load the data: `python ingest.py`
-  * Run: `python qa.py`
 
 
 ## Ideas
@@ -31,7 +10,7 @@ To get good results, be as precise as possible with your prompts.
 * :telescope: A bot for coming up with legal arguments for specific cases based on German laws :construction:
 
 
-## Examples
+## Demo
 
 ### QA Bot
 <img src="https://github.com/felixocker/german_law_bot/raw/main/docs/qa-bot.gif" alt="QA bot" width="800"/>
@@ -40,9 +19,34 @@ To get good results, be as precise as possible with your prompts.
 <img src="https://github.com/felixocker/german_law_bot/raw/main/docs/studybuddy.gif" alt="Study buddy" width="800"/>
 
 
-## Sources
-* [EStG](https://www.gesetze-im-internet.de/estg/)
-* [BGB](https://www.gesetze-im-internet.de/bgb/)
+## Instructions
+* Set an environment variable for your `OPENAI_API_KEY`, see [these instructions](https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety)
+* Install dependencies
+  * With poetry (recommended): `poetry install`
+  * With pip: `python -m venv .venv && source .venv/bin/activate && pip install .`
+* Browser interface
+  * If installed with poetry: `cd german_law_bot && poetry run python frontend.py`
+  * If installed with pip: `cd german_law_bot && python frontend.py`
+* (Limited) command line usage:
+  * Specify the codes of law want to load in `config.yaml` (provide the download links for the XML zips)
+  * Load the data: `python ingest.py`
+  * Run QA bot: `python qa.py`
+
+
+## Contents
+* `data/`
+  * `chroma/` - the persistent vector store lives here
+  * `downloads/` - source files are stored here
+* `docs/` - demo gifs
+* `german_law_bot/`
+  * `prompts/`
+    * `prompt_qa.py` - contains all prompts used
+  * `config.yaml` - settings for what to load
+  * `constants.py` - some generic settings
+  * `frontend.py` - gradio-based frontend
+  * `ingest.py` - download codes of law, extract data, feed into vector store
+  * `qa.py` - QA using RAG
+  * `utils.py` - utilities that are reused across modules
 
 
 ## Dev notes
