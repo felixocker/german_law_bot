@@ -66,3 +66,10 @@ KONTEXT:
 LÖSUNGSVORSCHLAG DES LERNENDEN:
 {response}
 """
+
+PROMPT_SB_EXTRACT_ASSESSMENT = """\
+Beantworte basierend auf dem folgenden Feedback, ob die ursprüngliche Frage vollständig korrekt beantwortet wurde.
+Antworte NUR mit `JA`, falls die Antwort vollständig korrekt ist, sonst mit `NEIN`.
+FEEDBACK:
+{feedback}
+"""

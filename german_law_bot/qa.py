@@ -30,6 +30,7 @@ from prompts.prompt_qa import (
     PROMPT_RAG,
     PROMPT_SB_GEN_QUESTION,
     PROMPT_SB_ASSESS_ANSWER,
+    PROMPT_SB_EXTRACT_ASSESSMENT,
 )
 from utils import get_embedding
 
@@ -174,6 +175,8 @@ def assess_answer(
     )
     msgs = [{"role": "user", "content": prompt}]
     response = query_llm(msgs, model=model)
+    prompt_correctness = PROMPT_SB_EXTRACT_ASSESSMENT.format(feedback=response)
+    assessment = True if "ja" in prompt_correctness.lower() else False
     store(
         StudyBuddyEntry(
             topic=topic,
@@ -181,7 +184,7 @@ def assess_answer(
             question=question,
             answer=response,
             explanation=response,
-            assessment=None,
+            assessment=assessment,
         )
     )
     return response
