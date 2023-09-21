@@ -180,20 +180,22 @@ def assess_answer(
         question=question, context=background, response=response
     )
     msgs = [{"role": "user", "content": prompt}]
-    response = query_llm(msgs, model=model)
-    prompt_correctness = PROMPT_SB_EXTRACT_ASSESSMENT.format(feedback=response)
-    assessment = True if "ja" in prompt_correctness.lower() else False
+    feedback = query_llm(msgs, model=model)
+    prompt_correctness = PROMPT_SB_EXTRACT_ASSESSMENT.format(feedback=feedback)
+    msgs_correctness = [{"role": "user", "content": prompt_correctness}]
+    feedback_bool = query_llm(msgs_correctness, model=model)
+    assessment = True if "ja" in feedback_bool.lower() else False
     store(
         StudyBuddyEntry(
             topic=topic,
             source=background,
             question=question,
             answer=response,
-            explanation=response,
+            explanation=feedback,
             assessment=assessment,
         )
     )
-    return response
+    return feedback
 
 
 if __name__ == "__main__":
