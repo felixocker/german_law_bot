@@ -44,6 +44,7 @@ To get good results, be as precise as possible with your prompts.
   * `config.yaml` - settings for what to load
   * `constants.py` - some generic settings
   * `frontend.py` - gradio-based frontend
+  * `history.py` - keep track of interactions with the bot
   * `ingest.py` - download codes of law, extract data, feed into vector store
   * `qa.py` - QA using RAG
   * `utils.py` - utilities that are reused across modules
