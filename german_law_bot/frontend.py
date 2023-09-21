@@ -61,10 +61,10 @@ def gen_question_sb(context, n_results, law_filter):
     return response
 
 
-def rate_response_sb(response):
+def rate_response_sb(topic, response):
     global MODEL, SB_CONTEXT, SB_QUESTION
     response = assess_answer(
-        question=SB_QUESTION, background=SB_CONTEXT, response=response, model=MODEL
+        topic=topic, question=SB_QUESTION, background=SB_CONTEXT, response=response, model=MODEL
     )
     response += "\n\nQUELLE:\n\n" + SB_CONTEXT
     return response
@@ -284,7 +284,7 @@ with gr.Blocks() as demo:
     )
     submit_btn_sb.click(
         fn=rate_response_sb,
-        inputs=[input_sb],
+        inputs=[content_sb, input_sb],
         outputs=[solution_sb],
     )
 

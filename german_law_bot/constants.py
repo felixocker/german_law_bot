@@ -25,3 +25,5 @@ OPENAI_EF = embedding_functions.OpenAIEmbeddingFunction(
 )
 
 AUTO_LAUNCH_BROWSER: bool = True
+
+PERSISTENT_HISTORY = "../data/history.db"

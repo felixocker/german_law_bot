@@ -19,6 +19,11 @@ from constants import (
     COLLECTION_NAME,
     OPENAI_EF,
 )
+from history import (
+    store,
+    StudyBuddyEntry,
+    QuestionAnswerEntry,
+)
 from prompts.prompt_qa import (
     PROMPT_MAP_REDUCE,
     PROMPT_MAP_REDUCE_SUMMARY,
@@ -88,15 +93,15 @@ def rag_query(
     """Answer query using Retrieval Augmented Generation.
     Use map reduce if the number of chunks to be considered is set to be larger than 1.
     """
-    law_filter = set_law_filter(law_filter)
-    chunks_ = retrieve_from_vdb(query=query, n=n_results, where_filter=law_filter)
+    law_filter_ = set_law_filter(law_filter)
+    chunks_ = retrieve_from_vdb(query=query, n=n_results, where_filter=law_filter_)
     sources = chunks_["ids"][0]
     irrelevant_srcs = None
     if n_results == 1:
         context = chunks_["documents"][0][0]
         prompt = PROMPT_RAG.format(context=context, question=query)
     elif n_results > 1:
-        context = {}
+        context_ = {}
         irrelevant_srcs = []
         for i in range(n_results):
             context_single = chunks_["documents"][0][i]
@@ -106,7 +111,7 @@ def rag_query(
             if res.strip().lower() == "irrelevant":
                 irrelevant_srcs.append(sources[i])
                 continue
-            context[sources[i]] = res
+            context_[sources[i]] = res
         sources = [s for s in sources if s not in irrelevant_srcs]
         if not sources:
             return (
@@ -114,11 +119,11 @@ def rag_query(
                 f"(geprueft: {', '.join(irrelevant_srcs)})."
             )
         else:
-            context_summary = "\n".join(
-                [src + ": " + txt for src, txt in context.items()]
+            context = "\n".join(
+                [src + ": " + txt for src, txt in context_.items()]
             )
         prompt = PROMPT_MAP_REDUCE_SUMMARY.format(
-            context=context_summary,
+            context=context,
             question=query,
         )
     else:
@@ -129,6 +134,7 @@ def rag_query(
     response = res + f"\n\nQuelle: {', '.join(sources)}"
     if irrelevant_srcs:
         response += f" (Auch geprueft: {', '.join(irrelevant_srcs)})"
+    store(QuestionAnswerEntry(question=query, context_summary=context, answer=response, laws=law_filter))
     return response
 
 
@@ -161,13 +167,24 @@ def generate_question(
 
 
 def assess_answer(
-    question: str, background: str, response: str, model: str = BASE_CHAT_MODEL
+    topic: str, question: str, background: str, response: str, model: str = BASE_CHAT_MODEL
 ) -> str:
     prompt = PROMPT_SB_ASSESS_ANSWER.format(
         question=question, context=background, response=response
     )
     msgs = [{"role": "user", "content": prompt}]
-    return query_llm(msgs, model=model)
+    response = query_llm(msgs, model=model)
+    store(
+        StudyBuddyEntry(
+            topic=topic,
+            source=background,
+            question=question,
+            answer=response,
+            explanation=response,
+            assessment=None,
+        )
+    )
+    return response
 
 
 if __name__ == "__main__":

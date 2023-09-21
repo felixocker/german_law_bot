@@ -157,3 +157,4 @@ cython_debug/
 
 # Individual
 .ideas.md
+data/*.db
