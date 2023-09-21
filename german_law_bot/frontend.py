@@ -127,7 +127,6 @@ def describe_loaded() -> str:
 def retrieve_history(hist_filter: str) -> dict:
     objs = retrieve(hist_filter)
     df = pd.DataFrame([o.__dict__ for o in objs])
-    print(df)
     return gr.Dataframe.update(value=df)
 
 
@@ -280,7 +279,7 @@ with gr.Blocks() as demo:
             filter_hist_btn = gr.Button("Set filter")
 
         with gr.Row():
-            history_df = gr.Dataframe(interactive=False)
+            history_df = gr.Dataframe(interactive=False, wrap=True)
 
     set_model_btn.click(
         fn=set_model,
