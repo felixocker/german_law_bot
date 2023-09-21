@@ -35,7 +35,7 @@ class StudyBuddyEntry:
 
 def store(entry: StudyBuddyEntry | QuestionAnswerEntry) -> None:
     if isinstance(entry, StudyBuddyEntry):
-        entry_type = "studdybuddy"
+        entry_type = "studybuddy"
     elif isinstance(entry, QuestionAnswerEntry):
         entry_type = "qabot"
     else:
@@ -48,10 +48,11 @@ def store(entry: StudyBuddyEntry | QuestionAnswerEntry) -> None:
             db[entry_type].append(entry)
 
 
-def retrieve(entry_type: str = "studdybuddy"):
+def retrieve(entry_type: str = "studybuddy"):
     with shelve.open(PERSISTENT_HISTORY) as db:
         if entry_type not in db:
-            return "Nothing to show."
+            logger.warning(f"Invalid key {entry_type} for looking up history.")
+            return []
         return db[entry_type]
 
 

@@ -273,7 +273,7 @@ with gr.Blocks() as demo:
         with gr.Row():
             history_filter = gr.Radio(
                 label="Choose the interaction type you want to browse.",
-                choices=["qabot", "studdybuddy"],
+                choices=["qabot", "studybuddy"],
                 value="qabot",
             )
             filter_hist_btn = gr.Button("Set filter")
