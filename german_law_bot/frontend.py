@@ -127,14 +127,13 @@ with gr.Blocks() as demo:
         description = gr.Markdown(describe_loaded())
 
         with gr.Row():
-            model_ = gr.Dropdown(
+            model_ = gr.Radio(
                 label=(
                     "Choose an LLM to use, "
                     "gpt-4 may be more exact but is slower and more expensive"
                 ),
                 choices=list(CHAT_MODELS),
-                value=BASE_CHAT_MODEL,
-                multiselect=False,
+                value=BASE_CHAT_MODEL
             )
             set_model_btn = gr.Button("Set model")
 
