@@ -59,8 +59,3 @@ def retrieve(entry_type: str = "studybuddy"):
 def reset() -> None:
     """Deletes entire history. Use with CAUTION."""
     os.remove(PERSISTENT_HISTORY)
-
-
-if __name__ == "__main__":
-    # store(QuestionAnswerEntry("test", "test", "test"))
-    print(*retrieve(), sep="\n")
