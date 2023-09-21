@@ -48,7 +48,7 @@ def store(entry: StudyBuddyEntry | QuestionAnswerEntry) -> None:
             db[entry_type].append(entry)
 
 
-def inspect(entry_type: str = "studdybuddy"):
+def retrieve(entry_type: str = "studdybuddy"):
     with shelve.open(PERSISTENT_HISTORY) as db:
         if entry_type not in db:
             return "Nothing to show."
@@ -62,4 +62,4 @@ def reset() -> None:
 
 if __name__ == "__main__":
     # store(QuestionAnswerEntry("test", "test", "test"))
-    print(*inspect(), sep="\n")
+    print(*retrieve(), sep="\n")

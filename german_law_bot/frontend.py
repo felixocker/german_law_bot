@@ -4,12 +4,14 @@ import logging
 import time
 
 import gradio as gr
+import pandas as pd
 
 from constants import (
     AUTO_LAUNCH_BROWSER,
     BASE_CHAT_MODEL,
     CHAT_MODELS,
 )
+from history import retrieve
 from ingest import (
     load_from_config,
     delete_from_chroma,
@@ -120,6 +122,13 @@ def describe_loaded() -> str:
     description_ = "<br>".join([law + ": " + config[law]["website"] for law in config])
     description_ += "<br>" + get_chroma_stats()
     return description_
+
+
+def retrieve_history(hist_filter: str) -> dict:
+    objs = retrieve(hist_filter)
+    df = pd.DataFrame([o.__dict__ for o in objs])
+    print(df)
+    return gr.Dataframe.update(value=df)
 
 
 with gr.Blocks() as demo:
@@ -259,6 +268,20 @@ with gr.Blocks() as demo:
         with gr.Row():
             gr.ClearButton(components=[content_sb, question_sb, input_sb, solution_sb])
 
+    with gr.Tab("History"):
+        gr.Markdown("## Browse past interactions with the bot")
+
+        with gr.Row():
+            history_filter = gr.Radio(
+                label="Choose the interaction type you want to browse.",
+                choices=["qabot", "studdybuddy"],
+                value="qabot",
+            )
+            filter_hist_btn = gr.Button("Set filter")
+
+        with gr.Row():
+            history_df = gr.Dataframe(interactive=False)
+
     set_model_btn.click(
         fn=set_model,
         inputs=[model_],
@@ -290,6 +313,11 @@ with gr.Blocks() as demo:
         fn=rate_response_sb,
         inputs=[content_sb, input_sb],
         outputs=[solution_sb],
+    )
+    filter_hist_btn.click(
+        fn=retrieve_history,
+        inputs=[history_filter],
+        outputs=[history_df],
     )
 
 
