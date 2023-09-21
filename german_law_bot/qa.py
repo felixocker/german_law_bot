@@ -120,9 +120,7 @@ def rag_query(
                 f"(geprueft: {', '.join(irrelevant_srcs)})."
             )
         else:
-            context = "\n".join(
-                [src + ": " + txt for src, txt in context_.items()]
-            )
+            context = "\n".join([src + ": " + txt for src, txt in context_.items()])
         prompt = PROMPT_MAP_REDUCE_SUMMARY.format(
             context=context,
             question=query,
@@ -135,7 +133,11 @@ def rag_query(
     response = res + f"\n\nQuelle: {', '.join(sources)}"
     if irrelevant_srcs:
         response += f" (Auch geprueft: {', '.join(irrelevant_srcs)})"
-    store(QuestionAnswerEntry(question=query, context_summary=context, answer=response, laws=law_filter))
+    store(
+        QuestionAnswerEntry(
+            question=query, context_summary=context, answer=response, laws=law_filter
+        )
+    )
     return response
 
 
@@ -168,7 +170,11 @@ def generate_question(
 
 
 def assess_answer(
-    topic: str, question: str, background: str, response: str, model: str = BASE_CHAT_MODEL
+    topic: str,
+    question: str,
+    background: str,
+    response: str,
+    model: str = BASE_CHAT_MODEL,
 ) -> str:
     prompt = PROMPT_SB_ASSESS_ANSWER.format(
         question=question, context=background, response=response

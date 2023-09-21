@@ -64,7 +64,11 @@ def gen_question_sb(context, n_results, law_filter):
 def rate_response_sb(topic, response):
     global MODEL, SB_CONTEXT, SB_QUESTION
     response = assess_answer(
-        topic=topic, question=SB_QUESTION, background=SB_CONTEXT, response=response, model=MODEL
+        topic=topic,
+        question=SB_QUESTION,
+        background=SB_CONTEXT,
+        response=response,
+        model=MODEL,
     )
     response += "\n\nQUELLE:\n\n" + SB_CONTEXT
     return response
@@ -133,7 +137,7 @@ with gr.Blocks() as demo:
                     "gpt-4 may be more exact but is slower and more expensive"
                 ),
                 choices=list(CHAT_MODELS),
-                value=BASE_CHAT_MODEL
+                value=BASE_CHAT_MODEL,
             )
             set_model_btn = gr.Button("Set model")
 
