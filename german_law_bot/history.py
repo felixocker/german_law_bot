@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class QuestionAnswerEntry:
+    model: str
     question: str
     context_summary: str
     answer: str
@@ -25,6 +26,7 @@ class QuestionAnswerEntry:
 
 @dataclass
 class StudyBuddyEntry:
+    model: str
     topic: str
     source: str
     question: str

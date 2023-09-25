@@ -135,7 +135,11 @@ def rag_query(
         response += f" (Auch geprueft: {', '.join(irrelevant_srcs)})"
     store(
         QuestionAnswerEntry(
-            question=query, context_summary=context, answer=response, laws=law_filter
+            model=model,
+            question=query,
+            context_summary=context,
+            answer=response,
+            laws=law_filter,
         )
     )
     return response
@@ -187,6 +191,7 @@ def assess_answer(
     assessment = True if "ja" in feedback_bool.lower() else False
     store(
         StudyBuddyEntry(
+            model=model,
             topic=topic,
             source=background,
             question=question,
