@@ -277,6 +277,7 @@ with gr.Blocks() as demo:
                 value="qabot",
             )
             filter_hist_btn = gr.Button("Set filter")
+            refresh_hist_btn = gr.Button("Refresh")
 
         with gr.Row():
             history_df = gr.Dataframe(interactive=False, wrap=True)
@@ -314,6 +315,11 @@ with gr.Blocks() as demo:
         outputs=[solution_sb],
     )
     filter_hist_btn.click(
+        fn=retrieve_history,
+        inputs=[history_filter],
+        outputs=[history_df],
+    )
+    refresh_hist_btn.click(
         fn=retrieve_history,
         inputs=[history_filter],
         outputs=[history_df],
