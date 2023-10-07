@@ -139,15 +139,14 @@ with gr.Blocks() as demo:
         description = gr.Markdown(describe_loaded())
 
         with gr.Row():
-            model_ = gr.Radio(
+            set_model_radio = gr.Radio(
                 label=(
-                    "Choose an LLM to use, "
-                    "gpt-4 may be more exact but is slower and more expensive"
+                    "Choose an LLM to use. "
+                    "gpt-4 performs better but is slower and more expensive"
                 ),
                 choices=list(CHAT_MODELS),
                 value=BASE_CHAT_MODEL,
             )
-            set_model_btn = gr.Button("Set model")
 
         gr.Markdown("## Load additional codes of laws")
         with gr.Row():
@@ -233,7 +232,9 @@ with gr.Blocks() as demo:
         )
 
         n_results_sb = gr.Number(
-            value=5, label="Number of chunks to generate question from", precision=0
+            value=5,
+            label="Number of law chunks considered (increases variation)",
+            precision=0,
         )
 
         with gr.Row():
@@ -271,20 +272,19 @@ with gr.Blocks() as demo:
         gr.Markdown("## Browse past interactions with the bot")
 
         with gr.Row():
-            history_filter = gr.Radio(
+            history_filter_radio = gr.Radio(
                 label="Choose the interaction type you want to browse.",
                 choices=["qabot", "studybuddy"],
                 value="qabot",
             )
-            filter_hist_btn = gr.Button("Set filter")
             refresh_hist_btn = gr.Button("Refresh")
 
         with gr.Row():
             history_df = gr.Dataframe(interactive=False, wrap=True)
 
-    set_model_btn.click(
+    set_model_radio.change(
         fn=set_model,
-        inputs=[model_],
+        inputs=[set_model_radio],
     )
     load_btn.click(
         fn=add_to_db,
@@ -314,14 +314,14 @@ with gr.Blocks() as demo:
         inputs=[content_sb, input_sb],
         outputs=[solution_sb],
     )
-    filter_hist_btn.click(
+    history_filter_radio.change(
         fn=retrieve_history,
-        inputs=[history_filter],
+        inputs=[history_filter_radio],
         outputs=[history_df],
     )
     refresh_hist_btn.click(
         fn=retrieve_history,
-        inputs=[history_filter],
+        inputs=[history_filter_radio],
         outputs=[history_df],
     )
 
