@@ -28,9 +28,18 @@ To get good results, be as precise as possible with your prompts.
   * If installed with poetry: `cd german_law_bot && poetry run python frontend.py`
   * If installed with pip: `cd german_law_bot && python frontend.py`
 * (Limited) command line usage:
-  * Specify the codes of law want to load in `config.yaml` (provide the download links for the XML zips)
+  * Specify the codes of law you want to load in `config.yaml` (provide the download links for the XML zips, see the example for the BGB below)
   * Load the data: `python ingest.py`
   * Run QA bot: `python qa.py`
+
+```yaml
+BGB:
+  desired: true
+  file: BJNR001950896.xml
+  link: https://www.gesetze-im-internet.de/bgb/xml.zip
+  loaded: true
+  website: https://www.gesetze-im-internet.de/bgb/
+```
 
 
 ## Contents

@@ -157,4 +157,5 @@ cython_debug/
 
 # Individual
 .ideas.md
+german_law_bot/config.yaml
 data/*.db
