@@ -60,6 +60,17 @@ def retrieve_from_vdb(
     return relevant_chunks
 
 
+def validate_vdb_results(chunks: dict) -> str | None:
+    if not chunks["ids"][0]:
+        logger.error("Retrieval did not return any relevant chunks.")
+        return (
+            "Entschuldigung, es sind keine relevanten Informationen verfügbar. "
+            "Stelle sicher, dass die Gesetze in den Einstellungen geladen wurden."
+        )
+    else:
+        return None
+
+
 def query_llm(
     msgs: List[Dict[str, str]],
     model: str = BASE_CHAT_MODEL,
@@ -96,6 +107,9 @@ def rag_query(
     """
     law_filter_ = set_law_filter(law_filter)
     chunks_ = retrieve_from_vdb(query=query, n=n_results, where_filter=law_filter_)
+    invalid_retrieval_msg = validate_vdb_results(chunks_)
+    if invalid_retrieval_msg:
+        return invalid_retrieval_msg
     sources = chunks_["ids"][0]
     irrelevant_srcs = None
     if n_results == 1:
@@ -163,6 +177,9 @@ def generate_question(
 ) -> tuple[str, str]:
     law_filter = set_law_filter(law_filter)
     chunks = retrieve_from_vdb(query=context, where_filter=law_filter, n=n_results)
+    invalid_retrieval_msg = validate_vdb_results(chunks)
+    if invalid_retrieval_msg:
+        return "", invalid_retrieval_msg
     chunk_id = random.randrange(0, n_results)
     context_id = chunks["ids"][0][chunk_id]
     context_chunk = chunks["documents"][0][chunk_id]
