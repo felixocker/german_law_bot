@@ -168,7 +168,7 @@ def get_chroma_stats() -> str:
     collection = chroma_client.get_or_create_collection(
         name=COLLECTION_NAME, embedding_function=OPENAI_EF
     )
-    return "Number of embeddings in the collection: " + str(collection.count())
+    return "Anzahl an Embeddings im Vector Store: " + str(collection.count())
 
 
 def peek() -> None:

@@ -131,39 +131,39 @@ def retrieve_history(hist_filter: str) -> dict:
 
 
 with gr.Blocks() as demo:
-    gr.Markdown("# German law bot")
+    gr.Markdown("# 🧑‍⚖🧞 German law bot")
 
-    with gr.Tab("Settings"):
-        gr.Markdown("## Information and settings")
+    with gr.Tab("Einstellungen"):
+        gr.Markdown("## Informationen und Einstellungen")
 
         description = gr.Markdown(describe_loaded())
 
         with gr.Row():
             set_model_radio = gr.Radio(
                 label=(
-                    "Choose an LLM to use. "
-                    "gpt-4 performs better but is slower and more expensive"
+                    "Wähle ein Sprachmodell. "
+                    "gpt-4 funktioniert am besten, ist aber langsamer und teurer"
                 ),
                 choices=list(CHAT_MODELS),
                 value=BASE_CHAT_MODEL,
             )
 
-        gr.Markdown("## Load additional codes of laws")
+        gr.Markdown("## Lade weitere Gesetze")
         with gr.Row():
             abbreviation_add = gr.Textbox(
-                label="Abbreviation of the law", placeholder="E.g., BGB"
+                label="Abkürzung des Gesetzes", placeholder="Z.B. BGB"
             )
             website = gr.Textbox(
-                label="Link to the online resource",
-                placeholder="E.g., https://www.gesetze-im-internet.de/bgb/",
+                label="Link zur Onlinequelle",
+                placeholder="Z.B. https://www.gesetze-im-internet.de/bgb/",
             )
             link = gr.Textbox(
-                label="Link to the XML download",
-                placeholder="E.g., https://www.gesetze-im-internet.de/bgb/xml.zip",
+                label="Link zum XML Download",
+                placeholder="Z.B. https://www.gesetze-im-internet.de/bgb/xml.zip",
             )
-            status_add = gr.Textbox(label="Status", placeholder="Idle")
+            status_add = gr.Textbox(label="Status", placeholder="Bereit")
         with gr.Row():
-            load_btn = gr.Button("Load")
+            load_btn = gr.Button("Laden")
         gr.Examples(
             examples=[
                 [
@@ -182,35 +182,41 @@ with gr.Blocks() as demo:
             fn=add_to_db,
             cache_examples=False,
         )
-        gr.Markdown("## Delete codes of laws")
+        gr.Markdown("## Lösche Gesetze")
         with gr.Row():
             abbreviation_del = gr.Dropdown(
-                label="Abbreviation of the law to be deleted",
+                label="Abkürzung des zu löschenden Gesetzes",
                 choices=[law for law in load_settings()],
                 multiselect=False,
             )
-            status_del = gr.Textbox(label="Status", placeholder="Idle")
+            status_del = gr.Textbox(label="Status", placeholder="Bereit")
         with gr.Row():
-            del_btn = gr.Button("Delete")
+            del_btn = gr.Button("Löschen")
 
-    with gr.Tab("QA bot"):
-        gr.Markdown("## QA bot for German laws")
+    with gr.Tab("QA Bot"):
+        gr.Markdown("## QA Bot für deutsche Gesetze")
 
         law_filter_ = gr.Dropdown(
-            label="Optionally limit the search to specific laws",
+            label="Schränke die Suche auf bestimmte Gesetze ein (optional)",
             choices=[law for law in load_settings()],
             multiselect=True,
         )
 
         n_results_ = gr.Number(
             value=5,
-            label="Number of chunks to be considered",
+            label="Anzahl der zu berücksichtigenden Textabschnitte",
             precision=0,
             render=False,
         )
 
         gr.ChatInterface(
             echo,
+            submit_btn="Fragen",
+            stop_btn="Abbrechen",
+            retry_btn="🔄 Erneut versuchen",
+            undo_btn="↩️ Zurücksetzen",
+            clear_btn="🗑️ Löschen",
+            additional_inputs_accordion_name="Weitere Einstellungen",
             additional_inputs=[
                 n_results_,
                 law_filter_,
@@ -218,66 +224,69 @@ with gr.Blocks() as demo:
         )
 
     with gr.Tab("Study buddy"):
-        gr.Markdown("## Study buddy for learning about German laws")
+        gr.Markdown("## Study buddy um deutsche Gesetze zu lernen")
 
         law_filter_sb = gr.Dropdown(
-            label="Choose laws for the question generation",
+            label="Wähle Gesetze für die Fragen generiert werden",
             choices=[law for law in load_settings()],
             multiselect=True,
         )
 
         content_sb = gr.Textbox(
-            label="Content of interest",
-            placeholder="E.g., Widerruf",
+            label="Relevanter Bereich",
+            placeholder="Z.B. Widerruf",
         )
 
         n_results_sb = gr.Number(
             value=5,
-            label="Number of law chunks considered (increases variation)",
+            label="Anzahl an Gesetzen, aus denen Fragen generiert werden (erhöht die Variation)",
             precision=0,
         )
 
         with gr.Row():
-            generate_btn_sb = gr.Button("Generate question")
+            generate_btn_sb = gr.Button("Generiere eine Frage")
 
         with gr.Row():
             question_sb = gr.Textbox(
-                label="Question",
-                placeholder="To be generated...",
+                label="Frage",
+                placeholder="Zu generieren...",
             )
 
         with gr.Row():
-            show_hint_btn_sb = gr.Button("Show hint")
-            hide_hint_btn_sb = gr.Button("Hide hint")
+            show_hint_btn_sb = gr.Button("Gib mir einen Tipp")
+            hide_hint_btn_sb = gr.Button("Verstecke den Tipp")
         hint_sb = gr.Textbox("", label="Hint", visible=False)
 
         with gr.Row():
             input_sb = gr.Textbox(
-                label="Your answer",
+                label="Antwort",
             )
 
         with gr.Row():
-            submit_btn_sb = gr.Button("Submit")
+            submit_btn_sb = gr.Button("Bestätigen")
 
         with gr.Row():
             solution_sb = gr.Textbox(
-                label="Solution",
-                placeholder="To be generated...",
+                label="Lösung",
+                placeholder="Zu generieren...",
             )
 
         with gr.Row():
-            gr.ClearButton(components=[content_sb, question_sb, input_sb, solution_sb])
+            gr.ClearButton(
+                components=[content_sb, question_sb, input_sb, solution_sb],
+                value="🗑️ Löschen",
+            )
 
-    with gr.Tab("History"):
-        gr.Markdown("## Browse past interactions with the bot")
+    with gr.Tab("Historie"):
+        gr.Markdown("## Durchsuche bisherige Interaktionen mit dem Bot")
 
         with gr.Row():
             history_filter_radio = gr.Radio(
-                label="Choose the interaction type you want to browse.",
+                label="Wähle den Interaktionstyp, den du durchsuchen möchtest.",
                 choices=["qabot", "studybuddy"],
                 value="qabot",
             )
-            refresh_hist_btn = gr.Button("Refresh")
+            refresh_hist_btn = gr.Button("Aktualisieren")
 
         with gr.Row():
             history_df = gr.Dataframe(interactive=False, wrap=True)
