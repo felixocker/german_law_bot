@@ -50,6 +50,7 @@ class Paragraph:
     title: str
     text: str
     footnotes: str
+    version_info: str
     embedding: List[float] = None
 
 
@@ -59,6 +60,9 @@ def extract_xml(source_dir: str, source_file: str) -> List[Paragraph]:
     res = []
     tree = ET.parse(f)
     root = tree.getroot()
+    version_info = tree.findall(".//standkommentar")
+    version_info = " ".join([vi.text for vi in version_info])
+    logger.info(f"Version info for {source_file}: {version_info}")
     for norm in root:
         valid = True
         law, par, title, text, footnotes = None, None, None, None, None
@@ -88,7 +92,12 @@ def extract_xml(source_dir: str, source_file: str) -> List[Paragraph]:
                 valid = False
         if valid:
             par = Paragraph(
-                law=law, par=par, title=title, text=text, footnotes=footnotes
+                law=law,
+                par=par,
+                title=title,
+                text=text,
+                version_info=version_info,
+                footnotes=footnotes,
             )
             res.append(par)
         else:
@@ -118,6 +127,7 @@ def chunk_paragraphs(
                         par=p.par + f" Teil {i+1}",
                         title=p.title + f" Teil {i+1}",
                         text=p.text[chunk_start:chunk_end],
+                        version_info=p.version_info,
                         footnotes=p.footnotes,
                     )
                 )

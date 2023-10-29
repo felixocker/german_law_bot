@@ -239,7 +239,10 @@ with gr.Blocks() as demo:
 
         n_results_sb = gr.Number(
             value=5,
-            label="Anzahl an Gesetzen, aus denen Fragen generiert werden (erhöht die Variation)",
+            label=(
+                "Anzahl an Gesetzen, aus denen Fragen generiert werden "
+                "(erhöht die Variation)"
+            ),
             precision=0,
         )
 
