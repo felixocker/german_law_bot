@@ -11,8 +11,12 @@ if OPENAI_API_KEY is None:
         "https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety"
     )
 EMBEDDING_MODEL = "text-embedding-ada-002"
-BASE_CHAT_MODEL = "gpt-3.5-turbo"
-CHAT_MODELS = ("gpt-3.5-turbo", "gpt-4")
+BASE_CHAT_MODEL = "gpt-4-1106-preview"
+CHAT_MODELS = {
+    "gpt-3.5-turbo": "gpt-3.5-turbo",
+    "gpt-4": "gpt-4",
+    "gpt-4-turbo": "gpt-4-1106-preview",
+}
 
 CONFIG = "config.yaml"
 DOWNLOADS_DIR = "../data/downloads/"

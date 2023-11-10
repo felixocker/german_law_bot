@@ -39,7 +39,7 @@ SB_QUESTION: str = ""
 
 def set_model(model_) -> None:
     global MODEL
-    MODEL = model_
+    MODEL = CHAT_MODELS[model_]
     logger.info(f"Set model to {model_}")
 
 
@@ -142,9 +142,9 @@ with gr.Blocks() as demo:
             set_model_radio = gr.Radio(
                 label=(
                     "Wähle ein Sprachmodell. "
-                    "gpt-4 funktioniert am besten, ist aber langsamer und teurer"
+                    "gpt-4 funktioniert minimal besser, ist aber langsamer und teurer"
                 ),
-                choices=list(CHAT_MODELS),
+                choices=list(CHAT_MODELS.values()),
                 value=BASE_CHAT_MODEL,
             )
 
