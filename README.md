@@ -1,7 +1,19 @@
-# :judge: german_law_bot
+<h1 align="center">
+  :judge: german_law_bot
+</h1>
+
+<div align="center">
+
+  <a href="https://chat.openai.com/g/g-y3muGcnQr-german-law-bot">![Static Badge](https://img.shields.io/badge/GPT%20-%20GermanLawBot%20-%2000A67E?style=flat-square&logo=OpenAI&color=%2300A67E&link=https%3A%2F%2Fchat.openai.com%2Fg%2Fg-y3muGcnQr-german-law-bot)</a>
+
+</div>
+
+
 A QA bot and a study buddy for German law. \
 Disclaimer: This bot does not, and is not intended to, constitute legal advice. \
-To get good results, be as precise as possible with your prompts.
+To get good results, be as precise as possible with your prompts. \
+Just want to give the bot a try? Check out the [OpenAI GPT](https://chat.openai.com/g/g-y3muGcnQr-german-law-bot).
+Note that this requires a ChatGPT Plus subscription.
 
 
 ## Ideas
