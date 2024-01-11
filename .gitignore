@@ -159,3 +159,4 @@ cython_debug/
 .ideas.md
 german_law_bot/config.yaml
 data/*.db
+data/*.db.*
