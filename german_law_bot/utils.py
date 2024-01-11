@@ -4,7 +4,7 @@ import logging
 from typing import List
 import yaml
 
-import openai
+from openai import OpenAI
 
 from constants import (
     CONFIG,
@@ -16,8 +16,11 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+oai_client = OpenAI()
+
+
 def get_embedding(text: str, model: str = EMBEDDING_MODEL) -> List[float]:
-    return openai.Embedding.create(input=[text], model=model)["data"][0]["embedding"]
+    return oai_client.embeddings.create(input=[text], model=model).data[0].embedding
 
 
 def load_settings(config: str = CONFIG) -> dict:

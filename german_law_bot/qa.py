@@ -6,7 +6,7 @@ import logging
 import random
 
 import chromadb
-import openai
+from openai import OpenAI
 
 from typing import (
     List,
@@ -37,6 +37,9 @@ from utils import get_embedding
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+oai_client = OpenAI()
 
 
 def retrieve_from_vdb(
@@ -80,7 +83,7 @@ def query_llm(
     response = None
     while not response:
         try:
-            response = openai.ChatCompletion.create(
+            response = oai_client.chat.completions.create(
                 model=model,
                 messages=msgs,
                 temperature=temperature,
