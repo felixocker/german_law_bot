@@ -32,6 +32,7 @@ Note that this requires a ChatGPT Plus subscription.
 
 
 ## Instructions
+* Note: Currently (01/24) no support for Python 3.12 due to missing wheels for multidict
 * Set an environment variable for your `OPENAI_API_KEY`, see [these instructions](https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety)
 * Install dependencies
   * With poetry (recommended): `poetry install`
