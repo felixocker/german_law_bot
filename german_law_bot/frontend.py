@@ -32,7 +32,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-MODEL = BASE_CHAT_MODEL
+MODEL = CHAT_MODELS[BASE_CHAT_MODEL]
 SB_CONTEXT: str = ""
 SB_QUESTION: str = ""
 
@@ -144,7 +144,7 @@ with gr.Blocks() as demo:
                     "Wähle ein Sprachmodell. "
                     "gpt-4 funktioniert minimal besser, ist aber langsamer und teurer"
                 ),
-                choices=list(CHAT_MODELS.values()),
+                choices=list(CHAT_MODELS.keys()),
                 value=BASE_CHAT_MODEL,
             )
 
