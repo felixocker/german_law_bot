@@ -6,7 +6,12 @@ import logging
 import random
 
 import chromadb
-from openai import OpenAI
+from openai import (
+    OpenAI,
+    APIError,
+    RateLimitError,
+    InternalServerError,
+)
 
 from typing import (
     List,
@@ -88,11 +93,11 @@ def query_llm(
                 messages=msgs,
                 temperature=temperature,
             )
-        except openai.error.APIError as e:
+        except APIError as e:
             logger.error(e)
-        except openai.error.RateLimitError as e:
+        except InternalServerError as e:
             logger.error(e)
-        except openai.error.ServiceUnavailableError as e:
+        except RateLimitError as e:
             logger.error(e)
     res = response.choices[0].message.content
     logger.info(f"Received response to query: `{res}`.")
