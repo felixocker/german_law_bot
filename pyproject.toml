@@ -11,7 +11,7 @@ python = "^3.11"
 chromadb = "^0.4.6"
 black = "^23.7.0"
 ruff = "^0.0.285"
-gradio = "^3.40.1"
+gradio = "^4.14.0"
 pyyaml = "^6.0.1"
 openai = "^1.7.1"
 
